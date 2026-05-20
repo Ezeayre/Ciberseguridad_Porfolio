@@ -21,7 +21,7 @@ ls -la / | grep swapfile
 ```
 **Resultado:** Swapfile encontrado en `/swapfile` con 2.2 GB
 
-![Swapfile verificado](./screenshots/2026-05-18%2020-09-54.png)
+![Verificar swapfile](./screenshots/2026-05-18_20-09-54.png)
 
 ### Paso 2: Cargar archivo en memoria con Emacs
 ```bash
@@ -29,7 +29,7 @@ emacs /etc/passwd
 ```
 Esto carga el contenido de `/etc/passwd` en memoria RAM.
 
-![Emacs con passwd](./screenshots/2026-05-18%2020-14-54.png)
+![Emacs con /etc/passwd](./screenshots/2026-05-18_20-14-54.png)
 
 ### Paso 3: Obtener el PID del proceso
 ```bash
@@ -37,7 +37,7 @@ ps
 ```
 **Resultado:** PID de emacs = 4366
 
-![PID de Emacs](./screenshots/2026-05-18%2020-17-29.png)
+![Comando ps mostrando PID](./screenshots/2026-05-18_20-17-29.png)
 
 ### Paso 4: Limitar memoria para forzar swapping
 ```bash
@@ -45,7 +45,7 @@ prlimit --as=1000000 -p 4366
 ```
 **Explicación:** Limitamos a 1 MB la memoria disponible. Cuando Emacs intente usar más, volcará datos al swapfile.
 
-![Comando prlimit](./screenshots/2026-05-18%2020-18-53.png)
+![Comando prlimit ejecutado](./screenshots/2026-05-18_20-18-53.png)
 
 ### Paso 5: Traer Emacs al primer plano e intentar abrir otro archivo
 ```bash
@@ -56,50 +56,108 @@ Luego presionar `Ctrl+X Ctrl+F` en Emacs.
 **Resultado:** Emacs crashea con "Fatal error 11" y "Segmentation fault".
 **¿Por qué?** Los datos de `/etc/passwd` fueron volcados al swapfile para liberar RAM.
 
-![Emacs bloqueado](./screenshots/2026-05-18%2020-20-16.png)
+![Emacs crash: Fatal error 11](./screenshots/2026-05-18_20-20-16.png)
 
-### Paso 6: Copiar el swapfile
+### Paso 6: Copiar el swapfile y cambiar permisos
 ```bash
 sudo cp /swapfile ~/Desktop/swapfile
 sudo chmod 644 ~/Desktop/swapfile
 ```
 
-![Copia del swapfile](./screenshots/2026-05-18%2020-22-18.png)
+![Copia del swapfile](./screenshots/2026-05-18_20-22-18.png)
 
-### Paso 7: Analizar con Autopsy
-- Abrir Autopsy: `autopsy`
-- Crear nuevo caso: "swapfile_forense"
-- Agregar host: "linux-vm"
-- Agregar imagen: `/home/eze2/Desktop/swapfile`
-- Extraer strings ASCII y Unicode
-- Realizar búsqueda de palabras clave
+![Cambio de permisos](./screenshots/2026-05-18_20-23-28.png)
 
-![Autopsy New Case](./screenshots/2026-05-18%2020-23-28.png)
+### Paso 7: Instalar Autopsy
+```bash
+sudo apt install autopsy -y
+```
 
-![Autopsy Add Host](./screenshots/2026-05-18%2020-26-11.png)
+![Instalación de Autopsy](./screenshots/2026-05-18_20-26-11.png)
 
-![Autopsy análisis en progreso](./screenshots/2026-05-18%2020-29-03.png)
+### Paso 8: Ejecutar Autopsy
+```bash
+autopsy
+```
+Autopsy se abre en puerto 9999.
 
-### Paso 8: Búsqueda y recuperación
-Buscar en Autopsy: `root:x:`
+![Autopsy iniciado en puerto 9999](./screenshots/2026-05-18_20-29-03.png)
 
-**Resultado encontrado:**
+### Paso 9: Abrir interfaz web de Autopsy
+En el navegador, ir a `http://localhost:9999/autopsy`
+
+![Interfaz principal de Autopsy](./screenshots/2026-05-19_00-58-45.png)
+
+### Paso 10: Crear nuevo caso
+Hacer clic en "New Case" e ingresaremos:
+- Case Name: `swapfile_forense`
+- Description: `Analisis forense del swapfile de`
+- Investigator: `Ezequiel`
+
+![Formulario Create A New Case](./screenshots/2026-05-19_01-00-16.png)
+
+### Paso 11: Caso creado
+El caso `swapfile_forense` se crea exitosamente.
+
+![Caso creado, añadiendo host](./screenshots/2026-05-19_01-01-32.png)
+
+### Paso 12: Agregar host
+Autopsy pide que agregamos un host. Llenamos:
+- Host Name: `linux-vm`
+- Description: `Maquina virtual Linux`
+- Time zone: `EST5EDT`
+
+![Formulario Add A New Host](./screenshots/2026-05-19_01-03-00.png)
+
+### Paso 13: Agregar imagen (swapfile)
+Especificamos la ruta del swapfile:
+- Location: `/home/eze2/Desktop/swapfile`
+- Type: `Partition`
+- Import Method: `Symlink`
+
+![Formulario Add A New Image](./screenshots/2026-05-19_01-04-54.png)
+
+### Paso 14: Swapfile importado
+El swapfile se carga exitosamente como `swapfile-0-0` de tipo `raw`.
+
+![Swapfile importado en Autopsy](./screenshots/2026-05-19_01-07-40.png)
+
+### Paso 15: Extraer strings
+Autopsy permite extraer strings ASCII y Unicode para búsqueda rápida de palabras clave.
+
+![Opciones para extraer strings](./screenshots/2026-05-19_01-09-18.png)
+
+### Paso 16: Extrayendo strings en progreso
+Autopsy calcula MD5 y extrae strings ASCII y Unicode.
+
+![Extracción de strings completada](./screenshots/2026-05-19_01-12-44.png)
+
+### Paso 17: Búsqueda de "root:x:"
+Usar Keyword Search para buscar contenido de `/etc/passwd`.
+
+![Búsqueda para root:x:](./screenshots/2026-05-19_01-14-54.png)
+
+### Paso 18: **RESULTADOS ENCONTRADOS - root:x:**
+**¡¡ÉXITO!!** Autopsy encontró **2 occurrences de "root:x:"** en el swapfile.
+
 ```
 2 occurrences of root:x: were found
-Unit 960 (Hex - Ascii): root:x:0:0:r
-Unit 968 (Hex - Ascii): root:x:0:
+
+Unit 960 (Hex - Ascii)
+1: 0 (root:x:0:0:r)
+
+Unit 968 (Hex - Ascii)
+2: 0 (root:x:0:)
 ```
 
-![Resultados búsqueda root:x:](./screenshots/2026-05-18%2020-29-42.png)
+Esto **DEMUESTRA** que el contenido de `/etc/passwd` se volcó completamente al swapfile.
 
-También encontramos: `daemon:x:`
-```
-2 occurrences of daemon:x: were found
-Unit 960 (Hex - Ascii): daemon:x:1:1:d
-Unit 968 (Hex - Ascii): daemon:x:1:
-```
+![Resultados de búsqueda root:x:](./screenshots/2026-05-19_01-16-38.png)
 
-![Resultados búsqueda daemon:x:](./screenshots/2026-05-19%2000-58-45.png)
+### Paso 19: Búsqueda de "daemon:x:"
+Realizamos búsqueda adicional para confirmar.
+
+![Búsqueda de daemon:x: también encontrada](./screenshots/2026-05-19_01-16-38.png)
 
 ---
 
@@ -159,6 +217,7 @@ Con este proyecto practiqué:
 ✅ Documentación de procedimientos forenses
 
 ---
+
 
 **"¿Qué es un swapfile y por qué es importante en forense?"**
 
