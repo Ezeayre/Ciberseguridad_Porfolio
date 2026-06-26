@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía interactiva de comandos Linux esenciales para principiantes">
+    <meta name="keywords" content="Linux, comandos, terminal, bash, cheat sheet">
+    <meta name="author" content="Ezequiel Ayre">
+    <title>Linux Commands Guide - Cheat Sheet Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e4e4e7;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .search-box::placeholder {
+            color: #71717a;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #a1a1aa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e4e4e7;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            border-color: transparent;
+            color: white;
+        }
+
+        .level-section {
+            margin-bottom: 40px;
+        }
+
+        .level-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #00d4ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-title.basic { border-color: #00d4ff; }
+        .level-title.intermediate { border-color: #7b2cbf; }
+        .level-title.advanced { border-color: #ff6b6b; }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .command-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .command-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .command-description {
+            color: #a1a1aa;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .command-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .command-card.expanded .command-details {
+            max-height: 2000px;
+        }
+
+        .detail-section {
+            margin-bottom: 15px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #e4e4e7;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #a5f3fc;
+            overflow-x: auto;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .warning {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .command-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .tips-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tips-section h2 {
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tips-list li::before {
+            content: "✓";
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .next-steps {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .next-steps h2 {
+            margin-bottom: 20px;
+            color: #7b2cbf;
+        }
+
+        .next-steps ol {
+            padding-left: 20px;
+            color: #a1a1aa;
+        }
+
+        .next-steps li {
+            padding: 8px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            color: #71717a;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #71717a;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-container {
+                flex-direction: column;
+            }
+
+            .filter-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🐧 Linux Commands Guide</h1>
+            <p>Cheat Sheet Práctico Interactivo</p>
+        </header>
+
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchInput" placeholder="🔍 Buscar comandos (ej: grep, chmod, ls)...">
+        </div>
+
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="basic">📚 Básico</button>
+            <button class="filter-btn" data-filter="intermediate">🔍 Intermedio</button>
+            <button class="filter-btn" data-filter="advanced">🔐 Avanzado</button>
+        </div>
+
+        <div id="commandsContainer">
+            <!-- Commands will be loaded here -->
+        </div>
+
+        <div class="tips-section">
+            <h2>💡 Tips Importantes</h2>
+            <ul class="tips-list">
+                <li>Usa Tab - Autocomplete de comandos y rutas</li>
+                <li>Usa Ctrl+C - Detiene comando en ejecución</li>
+                <li>Usa Ctrl+Z - Pausa comando (fg para reanudar)</li>
+                <li>Usa Arrow Up - Historial de comandos anteriores</li>
+                <li>Combina comandos - Usa pipes (|) y redirecciones (>, >>)</li>
+                <li>Lee documentación - Usa `man comando` para aprender</li>
+            </ul>
+        </div>
+
+        <div class="next-steps">
+            <h2>📖 Próximos Pasos</h2>
+            <ol>
+                <li>Practica en terminal</li>
+                <li>Experimenta combinando comandos</li>
+                <li>Lee los manuales (`man`)</li>
+                <li>Busca soluciones usando `grep` en logs</li>
+                <li>Administra archivos y carpetas</li>
+            </ol>
+            <p style="margin-top: 20px; color: #00d4ff;">¡La práctica es la clave!</p>
+        </div>
+
+        <footer>
+            <p><strong>Autor:</strong> Ezequiel Ayre</p>
+            <p>
+                <a href="https://www.linkedin.com/in/ezequiel-ayre-6b753715b" target="_blank">LinkedIn</a> | 
+                <a href="https://github.com/Ezeayre" target="_blank">GitHub</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const commands = [
+            // NIVEL BÁSICO
+            {
+                name: "pwd",
+                level: "basic",
+                description: "Muestra la carpeta actual donde estás",
+                syntax: "pwd",
+                examples: [
+                    "$ pwd\n/home/usuario/Documentos"
+                ],
+                when: "Siempre que quieras saber dónde estás en el sistema"
+            },
+            {
+                name: "ls",
+                level: "basic",
+                description: "Lista archivos y carpetas en la carpeta actual",
+                syntax: "ls [opciones] [ruta]",
+                examples: [
+                    "ls                    # Lista simple",
+                    "ls -l                 # Lista con detalles (permisos, owner, tamaño)",
+                    "ls -la                # Incluye archivos ocultos (que empiezan con .)",
+                    "ls -h                 # Tamaños legibles (KB, MB, GB)",
+                    "ls -lh                # Combina: detalles + tamaños legibles"
+                ],
+                options: [
+                    "-l = Formato largo (detalles)",
+                    "-a = Mostrar archivos ocultos",
+                    "-h = Tamaños legibles",
+                    "-r = Orden inverso",
+                    "-S = Ordenar por tamaño"
+                ],
+                when: "Constantemente, para ver qué hay en carpetas"
+            },
+            {
+                name: "cd",
+                level: "basic",
+                description: "Cambia a otra carpeta",
+                syntax: "cd [ruta]",
+                examples: [
+                    "cd /home/usuario/Documentos      # Ir a carpeta específica",
+                    "cd ..                             # Ir a carpeta padre",
+                    "cd ~                              # Ir a home del usuario",
+                    "cd -                              # Volver a carpeta anterior",
+                    "cd /                              # Ir a raíz del sistema"
+                ],
+                when: "Cuando quieres navegar entre carpetas"
+            },
+            {
+                name: "mkdir",
+                level: "basic",
+                description: "Crea una nueva carpeta",
+                syntax: "mkdir [nombre]",
+                examples: [
+                    "mkdir proyecto                    # Crea carpeta 'proyecto'",
+                    "mkdir -p carpeta/subcarpeta      # Crea carpeta y subcarpetas (-p)",
+                    "mkdir folder1 folder2 folder3    # Crea múltiples carpetas"
+                ],
+                when: "Cuando necesitas crear nuevas carpetas"
+            },
+            {
+                name: "cat",
+                level: "basic",
+                description: "Muestra el contenido de un archivo en pantalla",
+                syntax: "cat [archivo]",
+                examples: [
+                    "cat archivo.txt                   # Muestra contenido",
+                    "cat archivo1.txt archivo2.txt    # Muestra múltiples archivos",
+                    "cat archivo.txt | grep 'palabra' # Busca palabra en archivo"
+                ],
+                when: "Para ver rápidamente qué hay dentro de un archivo"
+            },
+            {
+                name: "cp",
+                level: "basic",
+                description: "Copia archivos o carpetas",
+                syntax: "cp [opciones] origen destino",
+                examples: [
+                    "cp archivo.txt copia.txt          # Copia archivo",
+                    "cp archivo.txt /home/usuario/     # Copia archivo a otra carpeta",
+                    "cp -r carpeta/ copia_carpeta/    # Copia carpeta completa (-r recursivo)"
+                ],
+                when: "Cuando necesitas duplicar archivos o carpetas"
+            },
+            {
+                name: "mv",
+                level: "basic",
+                description: "Mueve o renombra archivos y carpetas",
+                syntax: "mv [origen] [destino]",
+                examples: [
+                    "mv archivo.txt nuevo_nombre.txt   # Renombra archivo",
+                    "mv archivo.txt /home/usuario/     # Mueve archivo a otra carpeta",
+                    "mv carpeta/ /home/usuario/        # Mueve carpeta"
+                ],
+                when: "Para mover o renombrar archivos"
+            },
+            {
+                name: "rm",
+                level: "basic",
+                description: "Elimina archivos o carpetas",
+                syntax: "rm [opciones] archivo",
+                examples: [
+                    "rm archivo.txt                    # Elimina archivo",
+                    "rm -r carpeta/                    # Elimina carpeta y contenido (-r)",
+                    "rm -f archivo.txt                 # Fuerza eliminación sin preguntar (-f)"
+                ],
+                warning: "No hay papelera de reciclaje. Una vez eliminado, es difícil recuperarlo.",
+                when: "Cuando necesitas eliminar archivos"
+            },
+            {
+                name: "touch",
+                level: "basic",
+                description: "Crea un archivo vacío",
+                syntax: "touch [nombre_archivo]",
+                examples: [
+                    "touch archivo.txt                 # Crea archivo vacío",
+                    "touch archivo1.txt archivo2.txt  # Crea múltiples archivos"
+                ],
+                when: "Para crear archivos rápidamente"
+            },
+            {
+                name: "echo",
+                level: "basic",
+                description: "Imprime texto en pantalla",
+                syntax: "echo 'texto'",
+                examples: [
+                    "echo 'Hola Mundo'                 # Imprime texto",
+                    "echo $USER                        # Imprime variable de usuario",
+                    "echo 'texto' > archivo.txt       # Guarda texto en archivo (sobrescribe)",
+                    "echo 'texto' >> archivo.txt      # Agrega texto al archivo"
+                ],
+                when: "Para imprimir texto o guardar información en archivos"
+            },
+            // NIVEL INTERMEDIO
+            {
+                name: "grep",
+                level: "intermediate",
+                description: "Busca patrones de texto en archivos",
+                syntax: "grep [opciones] 'patrón' archivo",
+                examples: [
+                    "grep 'error' log.txt              # Busca 'error' en archivo",
+                    "grep -i 'error' log.txt           # Busca ignorando mayúsculas (-i)",
+                    "grep -n 'error' log.txt           # Muestra número de línea (-n)",
+                    "grep -c 'error' log.txt           # Cuenta ocurrencias (-c)"
+                ],
+                when: "Constantemente para buscar en logs y archivos"
+            },
+            {
+                name: "find",
+                level: "intermediate",
+                description: "Busca archivos en el sistema",
+                syntax: "find [ruta] [opciones]",
+                examples: [
+                    "find . -name 'archivo.txt'        # Busca por nombre",
+                    "find / -type f -name '*.log'      # Busca logs en todo el sistema",
+                    "find . -size +10M                 # Busca archivos mayores a 10MB",
+                    "find . -mtime -7                  # Busca archivos modificados últimos 7 días"
+                ],
+                when: "Para encontrar archivos específicos en el sistema"
+            },
+            {
+                name: "chmod",
+                level: "intermediate",
+                description: "Cambia permisos de archivos y carpetas",
+                syntax: "chmod [permisos] archivo",
+                examples: [
+                    "chmod 755 script.sh               # rwxr-xr-x (ejecutable)",
+                    "chmod 644 archivo.txt             # rw-r--r-- (lectura)",
+                    "chmod +x script.sh                # Agrega permiso ejecutable",
+                    "chmod -r archivo.txt              # Quita permiso lectura"
+                ],
+                options: [
+                    "7 = rwx (lectura, escritura, ejecución)",
+                    "5 = r-x (lectura, ejecución)",
+                    "4 = r-- (solo lectura)"
+                ],
+                when: "Para controlar quién puede ver/modificar/ejecutar"
+            },
+            {
+                name: "chown",
+                level: "intermediate",
+                description: "Cambia el dueño de un archivo",
+                syntax: "chown usuario:grupo archivo",
+                examples: [
+                    "chown usuario archivo.txt         # Cambia dueño",
+                    "chown usuario:grupo archivo.txt   # Cambia dueño y grupo",
+                    "chown -R usuario carpeta/         # Cambia recursivo (-R)"
+                ],
+                when: "Para asignar propiedad de archivos"
+            },
+            {
+                name: "sudo",
+                level: "intermediate",
+                description: "Ejecuta comando con permisos de administrador",
+                syntax: "sudo comando",
+                examples: [
+                    "sudo apt update                   # Actualiza paquetes (requiere admin)",
+                    "sudo rm archivo.txt               # Elimina con permisos admin",
+                    "sudo useradd usuario              # Crea usuario nuevo"
+                ],
+                warning: "Solo usa cuando realmente lo necesites",
+                when: "Cuando necesitas permisos de administrador"
+            },
+            {
+                name: "ps",
+                level: "intermediate",
+                description: "Muestra procesos en ejecución",
+                syntax: "ps [opciones]",
+                examples: [
+                    "ps                                # Procesos básicos",
+                    "ps aux                            # Todos los procesos con detalles",
+                    "ps aux | grep firefox             # Busca proceso específico",
+                    "ps -ef --forest                   # Muestra árbol de procesos"
+                ],
+                when: "Para ver qué está corriendo en el sistema"
+            },
+            {
+                name: "kill",
+                level: "intermediate",
+                description: "Detiene un proceso en ejecución",
+                syntax: "kill [PID]",
+                examples: [
+                    "kill 1234                         # Detiene proceso con ID 1234",
+                    "kill -9 1234                      # Fuerza eliminación (-9)",
+                    "killall firefox                   # Detiene todos los procesos firefox"
+                ],
+                when: "Cuando necesitas detener un programa"
+            },
+            {
+                name: "top",
+                level: "intermediate",
+                description: "Muestra procesos y uso de CPU/memoria en tiempo real",
+                syntax: "top",
+                examples: [
+                    "top                               # Abre monitor",
+                    "top -u usuario                    # Muestra procesos de usuario específico"
+                ],
+                options: [
+                    "q = Salir",
+                    "k = Matar proceso",
+                    "M = Ordenar por memoria"
+                ],
+                when: "Para ver qué está consumiendo recursos"
+            },
+            {
+                name: "df",
+                level: "intermediate",
+                description: "Muestra espacio en disco disponible",
+                syntax: "df [opciones]",
+                examples: [
+                    "df                                # Espacio en disco",
+                    "df -h                             # Formato legible (GB, MB)",
+                    "df -i                             # Inodos disponibles"
+                ],
+                when: "Para verificar espacio en disco"
+            },
+            {
+                name: "du",
+                level: "intermediate",
+                description: "Muestra espacio usado por archivos/carpetas",
+                syntax: "du [opciones] [ruta]",
+                examples: [
+                    "du -h carpeta/                    # Tamaño de carpeta",
+                    "du -sh carpeta/                   # Total de carpeta (-s)",
+                    "du -sh *                          # Tamaño de cada item"
+                ],
+                when: "Para saber qué ocupa espacio"
+            },
+            // NIVEL AVANZADO
+            {
+                name: "ifconfig / ip",
+                level: "advanced",
+                description: "Muestra configuración de red",
+                syntax: "ifconfig / ip a",
+                examples: [
+                    "ifconfig                          # Muestra interfaces (viejo)",
+                    "ip a                              # Muestra interfaces (nuevo)",
+                    "ip route                          # Muestra rutas"
+                ],
+                when: "Para verificar IP, gateway, DNS"
+            },
+            {
+                name: "netstat",
+                level: "advanced",
+                description: "Muestra conexiones de red y puertos abiertos",
+                syntax: "netstat [opciones]",
+                examples: [
+                    "netstat -an                       # Puertos abiertos",
+                    "netstat -tulpn                    # Puertos con programas asociados",
+                    "netstat -i                        # Estadísticas de interfaces"
+                ],
+                when: "Para verificar puertos abiertos y conexiones"
+            },
+            {
+                name: "ssh",
+                level: "advanced",
+                description: "Conexión remota segura a otra máquina",
+                syntax: "ssh usuario@host",
+                examples: [
+                    "ssh usuario@192.168.1.100         # Conecta a máquina remota",
+                    "ssh -i clave.pem usuario@host    # Usa clave privada",
+                    "ssh -p 2222 usuario@host         # Usa puerto diferente"
+                ],
+                when: "Para administrar servidores remotos"
+            },
+            {
+                name: "scp",
+                level: "advanced",
+                description: "Copia archivos entre máquinas remotas (seguro)",
+                syntax: "scp archivo usuario@host:/ruta",
+                examples: [
+                    "scp archivo.txt usuario@192.168.1.100:/home/usuario/",
+                    "scp usuario@host:/archivo.txt .   # Descarga desde remoto"
+                ],
+                when: "Para transferir archivos de forma segura"
+            },
+            {
+                name: "tar",
+                level: "advanced",
+                description: "Comprime/descomprime archivos",
+                syntax: "tar [opciones] archivo.tar.gz",
+                examples: [
+                    "tar -czf archivo.tar.gz carpeta/  # Comprime (-c crear, -z gzip, -f archivo)",
+                    "tar -xzf archivo.tar.gz           # Descomprime (-x extraer)",
+                    "tar -tzf archivo.tar.gz           # Lista contenido (-t)"
+                ],
+                when: "Para comprimir/descomprimir archivos"
+            },
+            {
+                name: "apt",
+                level: "advanced",
+                description: "Instala/actualiza/elimina programas (en Debian/Ubuntu)",
+                syntax: "apt [comando] [paquete]",
+                examples: [
+                    "sudo apt update                   # Actualiza lista de paquetes",
+                    "sudo apt upgrade                  # Actualiza programas",
+                    "sudo apt install nombre_programa  # Instala programa",
+                    "sudo apt remove nombre_programa   # Desinstala programa"
+                ],
+                when: "Para gestionar software"
+            },
+            {
+                name: "nano",
+                level: "advanced",
+                description: "Editor de texto simple",
+                syntax: "nano archivo.txt",
+                examples: [
+                    "nano archivo.txt                  # Abre/crea archivo",
+                    "# Dentro de nano:",
+                    "# Ctrl+O = Guardar",
+                    "# Ctrl+X = Salir",
+                    "# Ctrl+W = Buscar"
+                ],
+                when: "Para editar archivos de configuración"
+            },
+            {
+                name: "vim",
+                level: "advanced",
+                description: "Editor de texto avanzado (más complejo que nano)",
+                syntax: "vim archivo.txt",
+                examples: [
+                    "vim archivo.txt                   # Abre archivo",
+                    "# Dentro de vim:",
+                    "# i = Insertar",
+                    "# Esc = Salir modo inserción",
+                    "# :w = Guardar",
+                    "# :q = Salir",
+                    "# :wq = Guardar y salir"
+                ],
+                when: "Para edición avanzada"
+            },
+            {
+                name: "grep + pipes",
+                level: "advanced",
+                description: "Combina comandos para operaciones complejas",
+                syntax: "comando1 | comando2 | comando3",
+                examples: [
+                    "ps aux | grep firefox             # Busca proceso firefox",
+                    "cat log.txt | grep 'error' | wc -l  # Cuenta errores",
+                    "ls -lh | grep '^-' | awk '{print $5}' # Lista tamaños"
+                ],
+                when: "Para operaciones complejas encadenando comandos"
+            },
+            {
+                name: "man",
+                level: "advanced",
+                description: "Muestra documentación de comandos",
+                syntax: "man comando",
+                examples: [
+                    "man ls                            # Documentación de ls",
+                    "man grep                          # Documentación de grep",
+                    "# Dentro de man: presiona 'q' para salir"
+                ],
+                when: "Cuando no sabes cómo usar un comando"
+            }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const commandsContainer = document.getElementById('commandsContainer');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        let currentFilter = 'all';
+
+        function renderCommands(commandsToRender) {
+            if (commandsToRender.length === 0) {
+                commandsContainer.innerHTML = '<div class="no-results">No se encontraron comandos que coincidan con la búsqueda</div>';
+                return;
+            }
+
+            const groupedCommands = {
+                basic: commandsToRender.filter(cmd => cmd.level === 'basic'),
+                intermediate: commandsToRender.filter(cmd => cmd.level === 'intermediate'),
+                advanced: commandsToRender.filter(cmd => cmd.level === 'advanced')
+            };
+
+            let html = '';
+
+            if (groupedCommands.basic.length > 0) {
+                html += `
+                    <div class="level-section">
+                        <h2 class="level-title basic">📚 Nivel Básico</h2>
+                        <div class="commands-grid">
+                            ${groupedCommands.basic.map(cmd => createCommandCard(cmd)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (groupedCommands.intermediate.length > 0) {
+                html += `
+                    <div class="level-section">
+                        <h2 class="level-title intermediate">🔍 Nivel Intermedio</h2>
+                        <div class="commands-grid">
+                            ${groupedCommands.intermediate.map(cmd => createCommandCard(cmd)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (groupedCommands.advanced.length > 0) {
+                html += `
+                    <div class="level-section">
+                        <h2 class="level-title advanced">🔐 Nivel Avanzado</h2>
+                        <div class="commands-grid">
+                            ${groupedCommands.advanced.map(cmd => createCommandCard(cmd)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            commandsContainer.innerHTML = html;
+
+            // Add click handlers to cards
+            document.querySelectorAll('.command-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+            });
+        }
+
+        function createCommandCard(cmd) {
+            let optionsHtml = '';
+            if (cmd.options) {
+                optionsHtml = `
+                    <div class="detail-section">
+                        <span class="detail-label">Opciones principales:</span>
+                        <div class="code-block">${cmd.options.join('<br>')}</div>
+                    </div>
+                `;
+            }
+
+            let warningHtml = '';
+            if (cmd.warning) {
+                warningHtml = `<div class="warning">⚠️ CUIDADO: ${cmd.warning}</div>`;
+            }
+
+            return `
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">${cmd.name}</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">${cmd.description}</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">${cmd.syntax}</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">${cmd.examples.join('<br><br>')}</div>
+                        </div>
+                        ${optionsHtml}
+                        ${warningHtml}
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">${cmd.when}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterCommands() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            let filtered = commands.filter(cmd => {
+                const matchesSearch = cmd.name.toLowerCase().includes(searchTerm) ||
+                                     cmd.description.toLowerCase().includes(searchTerm) ||
+                                     cmd.syntax.toLowerCase().includes(searchTerm);
+                const matchesFilter = currentFilter === 'all' || cmd.level === currentFilter;
+                return matchesSearch && matchesFilter;
+            });
+
+            renderCommands(filtered);
+        }
+
+        searchInput.addEventListener('input', filterCommands);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                filterCommands();
+            });
+        });
+
+        // Initial render
+        renderCommands(commands);
+    </script>
+</body>
+</html>
