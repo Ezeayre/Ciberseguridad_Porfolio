@@ -7362,7 +7362,7 @@ const contentByTopic = {
       tag: "Linux",
       title: "Linux Commands Guide",
       description: "30 comandos Linux organizados por nivel (Basico, Intermedio, Avanzado) con ejemplos practicos.",
-      href: "Linux/linux-commands-guide/GUIDE.md",
+      href: "Linux/linux-commands-guide/index.html",
       gradient: "card-gradient-1"
     },
     {
@@ -7371,7 +7371,7 @@ const contentByTopic = {
       tag: "Linux",
       title: "Linux Directory Structure",
       description: "Estructura de directorios en Linux. Que hace cada carpeta y donde buscar segun tu objetivo.",
-      href: "Linux/linux-directory-guide/GUIDE.md",
+      href: "Linux/linux-directory-guide/index.html",
       gradient: "card-gradient-2"
     },
     {
@@ -7380,7 +7380,7 @@ const contentByTopic = {
       tag: "Bash",
       title: "Script de Auditoría",
       description: "Script bash para auditoria de usuarios en Linux. Deteccion de permisos y vulnerabilidades.",
-      href: "Linux/script-usuarios-linux/GUIDE.md",
+      href: "Linux/script-usuarios-linux/index.html",
       gradient: "card-gradient-3"
     }
   ],
@@ -7391,7 +7391,7 @@ const contentByTopic = {
       tag: "Python",
       title: "Port Scanner Python",
       description: "Herramienta de escaneo de puertos desarrollada en Python. Deteccion de servicios abiertos.",
-      href: "Python/port-scanner/GUIDE.md",
+      href: "Python/port-scanner/index.html",
       gradient: "card-gradient-1"
     }
   ],
@@ -7402,7 +7402,7 @@ const contentByTopic = {
       tag: "SIEM",
       title: "Wazuh SIEM Setup",
       description: "Instalacion y configuracion de Wazuh. Manager en Ubuntu, agents en Windows y Ubuntu.",
-      href: "SIEM/wazuh-setup/GUIDE.md",
+      href: "SIEM/wazuh-setup/index.html",
       gradient: "card-gradient-1"
     },
     {
@@ -7420,7 +7420,7 @@ const contentByTopic = {
       tag: "Logs",
       title: "Log Files Guide",
       description: "Guia completa sobre logs en Linux y Windows. Que son, donde estan, como leerlos y analizarlos.",
-      href: "SIEM/log-files-guide/GUIDE.md",
+      href: "SIEM/log-files-guide/index.html",
       gradient: "card-gradient-3"
     },
     {
@@ -7438,7 +7438,7 @@ const contentByTopic = {
       tag: "SOC",
       title: "Tickets en SOC",
       description: "Que son los tickets, como se llenan, estructura, ciclo de vida y ejemplo real de ticket de phishing.",
-      href: "SIEM/tickets/GUIDE.md",
+      href: "SIEM/tickets/index.html",
       gradient: "card-gradient-5"
     }
   ],
@@ -7460,7 +7460,7 @@ const contentByTopic = {
       tag: "Forense",
       title: "Análisis Forense",
       description: "Analisis forense del swap en Linux. Tecnicas de recuperacion y analisis de memoria.",
-      href: "Forense/analisis-swap-linux/GUIDE.md",
+      href: "Forense/analisis-swap-linux/index.html",
       gradient: "card-gradient-1"
     }
   ],
@@ -7471,7 +7471,7 @@ const contentByTopic = {
       tag: "Teams",
       title: "Red Team vs Blue Team",
       description: "Comparacion entre metodologias ofensivas y defensivas en seguridad informatica.",
-      href: "RedTeam-vs-BlueTeam/GUIDE.md",
+      href: "RedTeam-vs-BlueTeam/index.html",
       gradient: "card-gradient-1"
     }
   ]
