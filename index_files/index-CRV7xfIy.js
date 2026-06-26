@@ -7362,7 +7362,7 @@ const contentByTopic = {
       tag: "Linux",
       title: "Linux Commands Guide",
       description: "30 comandos Linux organizados por nivel (Basico, Intermedio, Avanzado) con ejemplos practicos.",
-      href: "Linux/linux-commands-guide/GUIDE.md",
+      href: "Linux/linux-commands-guide/index.html",
       gradient: "card-gradient-1"
     },
     {
