@@ -1,0 +1,1688 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía interactiva de comandos Windows esenciales para principiantes">
+    <meta name="keywords" content="Windows, comandos, PowerShell, CMD, cheat sheet">
+    <meta name="author" content="Ezequiel Ayre">
+    <title>Windows Commands Guide - Cheat Sheet Interactivo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 10px;
+            color: #00d4ff;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .back-button:hover {
+            background: rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.5);
+            transform: translateX(-5px);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1rem;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #e4e4e7;
+            transition: all 0.3s ease;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+        }
+
+        .search-box::placeholder {
+            color: #71717a;
+        }
+
+        .filter-container {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            padding: 10px 25px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #a1a1aa;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .filter-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #e4e4e7;
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #00d4ff, #7b2cbf);
+            border-color: transparent;
+            color: white;
+        }
+
+        .level-section {
+            margin-bottom: 40px;
+        }
+
+        .level-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border-left: 4px solid #00d4ff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-title.basic { border-color: #00d4ff; }
+        .level-title.intermediate { border-color: #7b2cbf; }
+        .level-title.advanced { border-color: #ff6b6b; }
+
+        .commands-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .command-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+            border-color: rgba(0, 212, 255, 0.3);
+        }
+
+        .command-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .command-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: #00d4ff;
+        }
+
+        .command-description {
+            color: #a1a1aa;
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .command-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .command-card.expanded .command-details {
+            max-height: 2000px;
+        }
+
+        .detail-section {
+            margin-bottom: 15px;
+        }
+
+        .detail-label {
+            font-weight: bold;
+            color: #e4e4e7;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: #a5f3fc;
+            overflow-x: auto;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .warning {
+            background: rgba(255, 107, 107, 0.1);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            color: #ff6b6b;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .command-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .tips-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 40px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .tips-section h2 {
+            margin-bottom: 20px;
+            color: #00d4ff;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tips-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tips-list li::before {
+            content: "✓";
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .next-steps {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-top: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .next-steps h2 {
+            margin-bottom: 20px;
+            color: #7b2cbf;
+        }
+
+        .next-steps ol {
+            padding-left: 20px;
+            color: #a1a1aa;
+        }
+
+        .next-steps li {
+            padding: 8px 0;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            color: #71717a;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        footer a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #71717a;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+
+            .commands-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-container {
+                flex-direction: column;
+            }
+
+            .filter-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <a href="#" class="back-button">
+                ← Volver al Portfolio
+            </a>
+            <h1>🪟 Windows Commands Guide</h1>
+            <p>Cheat Sheet Práctico Interactivo</p>
+        </header>
+
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchInput" placeholder="🔍 Buscar comandos (ej: ipconfig, tasklist, Get-Process)...">
+        </div>
+
+        <div class="filter-container">
+            <button class="filter-btn active" data-filter="all">Todos</button>
+            <button class="filter-btn" data-filter="basic">📚 Básico</button>
+            <button class="filter-btn" data-filter="intermediate">🔍 Intermedio</button>
+            <button class="filter-btn" data-filter="advanced">🔐 Avanzado</button>
+        </div>
+
+        <div id="commandsContainer">
+                    <div class="level-section">
+                        <h2 class="level-title basic">📚 Nivel Básico</h2>
+                        <div class="commands-grid">
+                            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">ipconfig</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Muestra la configuración de red (IP, puerta de enlace, DNS)</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">ipconfig [opciones]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">ipconfig                    # Muestra IP actual<br><br>ipconfig /all               # Muestra detalles completos<br><br>ipconfig /release           # Libera IP<br><br>ipconfig /renew             # Renueva IP</div>
+                        </div>
+                        
+                    <div class="detail-section">
+                        <span class="detail-label">Opciones principales:</span>
+                        <div class="code-block">/all = Muestra detalles completos<br>/release = Libera dirección IP<br>/renew = Renueva dirección IP<br>/flushdns = Limpia caché DNS</div>
+                    </div>
+                
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Siempre que necesites verificar la configuración de red</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">ping</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Verifica la conectividad con otro host en la red</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">ping <dirección></dirección></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">ping google.com              # Verifica conectividad<br><br>ping 192.168.1.1             # Verifica router<br><br>ping -t google.com           # Ping continuo (Ctrl+C para detener)</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para verificar si un host está accesible</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">tasklist</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Lista todos los procesos en ejecución</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">tasklist [opciones]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">tasklist                    # Muestra todos los procesos<br><br>tasklist | findstr chrome    # Busca procesos de Chrome<br><br>tasklist /v                  # Información detallada</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para ver qué aplicaciones están corriendo</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">taskkill</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Termina un proceso en ejecución</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">taskkill /IM <nombre> /F</nombre></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">taskkill /IM chrome.exe /F  # Cierra Chrome forzadamente<br><br>taskkill /PID 1234 /F       # Cierra por ID de proceso<br><br>taskkill /F /IM notepad.exe # Fuerza cierre</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: Requiere permisos de administrador. /F fuerza el cierre sin confirmación.</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Cuando necesitas cerrar una aplicación que no responde</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">dir</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Lista archivos y carpetas de un directorio</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">dir [opciones] [ruta]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">dir                         # Lista carpeta actual<br><br>dir C:\Users                # Lista contenido de Users<br><br>dir /s                      # Búsqueda recursiva<br><br>dir /a                      # Incluye archivos ocultos</div>
+                        </div>
+                        
+                    <div class="detail-section">
+                        <span class="detail-label">Opciones principales:</span>
+                        <div class="code-block">/s = Búsqueda recursiva en subcarpetas<br>/a = Muestra archivos ocultos<br>/w = Formato ancho<br>/p = Pausa después de cada pantalla</div>
+                    </div>
+                
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Constantemente para ver qué hay en carpetas</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">cd</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Cambia de directorio (carpeta)</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">cd <ruta></ruta></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">cd C:\Windows               # Va a carpeta Windows<br><br>cd ..                       # Sube un nivel<br><br>cd \                        # Va a raíz del disco<br><br>cd /d D:\                  # Cambia de unidad</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para navegar por el sistema de archivos</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">copy</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Copia archivos de un lugar a otro</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">copy <origen> <destino></destino></origen></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">copy archivo.txt copia.txt  # Copia archivo<br><br>copy archivo.txt D:\backup\ # Copia a otra carpeta<br><br>copy *.txt D:\docs\        # Copia múltiples archivos</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para duplicar archivos o hacer backups</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">del</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Elimina archivos</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">del [opciones] <archivo></archivo></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">del archivo.txt             # Elimina archivo<br><br>del /P archivo.txt          # Pide confirmación<br><br>del *.tmp                   # Elimina todos los .tmp</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: No hay papelera de reciclaje desde CMD. Una vez eliminado, es difícil recuperarlo.</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Cuando necesitas eliminar archivos</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">cls</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Limpia la pantalla de la consola</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">cls</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">cls                         # Borra todo el contenido</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para limpiar el desorden en la pantalla</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">echo</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Imprime texto en pantalla</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">echo <texto></texto></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">echo Hola Mundo             # Imprime texto<br><br>echo %USERNAME%             # Imprime variable de usuario<br><br>echo texto &gt; archivo.txt    # Guarda texto en archivo</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para imprimir texto o guardar información</p>
+                        </div>
+                    </div>
+                </div>
+            
+                        </div>
+                    </div>
+                
+                    <div class="level-section">
+                        <h2 class="level-title intermediate">🔍 Nivel Intermedio</h2>
+                        <div class="commands-grid">
+                            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">netstat</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Muestra conexiones de red activas y puertos abiertos</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">netstat [opciones]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">netstat -an                 # Muestra todas las conexiones<br><br>netstat -b                  # Incluye nombres de procesos<br><br>netstat -o                  # Muestra IDs de proceso</div>
+                        </div>
+                        
+                    <div class="detail-section">
+                        <span class="detail-label">Opciones principales:</span>
+                        <div class="code-block">-a = Muestra todas las conexiones<br>-n = Muestra direcciones numéricas<br>-b = Muestra el ejecutable<br>-o = Muestra ID de proceso</div>
+                    </div>
+                
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para auditoría de seguridad y diagnóstico de red</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">Get-Process</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Lista procesos (PowerShell)</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">Get-Process [opciones]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">Get-Process                 # Muestra todos los procesos<br><br>Get-Process chrome          # Muestra proceso específico<br><br>Get-Process | Where-Object {$_.Memory -gt 100MB}</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">PowerShell es más poderoso que tasklist</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">systeminfo</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Muestra información del sistema (SO, RAM, CPU)</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">systeminfo</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">systeminfo                  # Información completa<br><br>systeminfo | findstr /C:"OS Name"</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para auditoría de hardware y configuración</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">wmic</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Windows Management Instrumentation Command-line</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">wmic <objeto> list</objeto></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">wmic os list brief          # Info del SO<br><br>wmic logicaldisk list       # Info de discos<br><br>wmic process list brief      # Lista procesos</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Herramienta poderosa para administración</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">gpupdate</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Actualiza las políticas de grupo</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">gpupdate [opciones]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">gpupdate /force             # Actualiza políticas inmediatamente</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: Requiere permisos de administrador</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para aplicar cambios de políticas de grupo</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">nslookup</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Resuelve nombres de dominio a IP</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">nslookup <dominio></dominio></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">nslookup google.com         # Encuentra IP de dominio<br><br>nslookup 8.8.8.8            # DNS inverso</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para diagnóstico de DNS</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">tracert</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Rastrea la ruta de paquetes hasta un host</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">tracert <dirección></dirección></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">tracert google.com          # Muestra cada salto<br><br>tracert -d google.com       # No resuelve nombres</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para diagnosticar problemas de red</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">netsh advfirewall</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Gestiona Windows Defender Firewall</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">netsh advfirewall <comando></comando></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">netsh advfirewall show allprofiles<br><br>netsh advfirewall set allprofiles state on</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: Requiere permisos de administrador</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para configurar el firewall</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">sfc</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">System File Checker - verifica integridad de archivos</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">sfc /scannow</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">sfc /scannow                # Escanea y repara archivos</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: Requiere permisos de administrador. Puede tardar tiempo.</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Cuando hay problemas con archivos de sistema</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">chkdsk</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Verifica integridad de disco duro</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">chkdsk <unidad> /F</unidad></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">chkdsk C: /F                # Verifica y repara unidad C:</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: Requiere permisos de administrador</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para verificar errores de disco</p>
+                        </div>
+                    </div>
+                </div>
+            
+                        </div>
+                    </div>
+                
+                    <div class="level-section">
+                        <h2 class="level-title advanced">🔐 Nivel Avanzado</h2>
+                        <div class="commands-grid">
+                            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">Get-EventLog</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Accede a logs del sistema (PowerShell)</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">Get-EventLog -LogName <nombre></nombre></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">Get-EventLog -LogName System -Newest 10<br><br>Get-EventLog -LogName Security | Where-Object {$_.EventID -eq 4625}</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Crítico para forensics y auditoría</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">icacls</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Gestiona permisos de archivos y carpetas</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">icacls <ruta> /grant <usuario>:<permisos></permisos></usuario></ruta></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">icacls archivo.txt /grant Admin:F<br><br>icacls carpeta /grant Usuario:R</div>
+                        </div>
+                        
+                    <div class="detail-section">
+                        <span class="detail-label">Opciones principales:</span>
+                        <div class="code-block">F = Full control (control total)<br>R = Read (lectura)<br>W = Write (escritura)<br>M = Modify (modificar)</div>
+                    </div>
+                
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para controlar permisos de archivos</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">auditpol</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Configura auditoría de seguridad</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">auditpol /get /category:*</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">auditpol /get /category:*    # Muestra políticas<br><br>auditpol /set /subcategory:"Logon" /success:enable</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: Requiere permisos de administrador</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para configurar auditoría de seguridad</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">reg</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Accede y modifica el Registro de Windows</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">reg <comando> <clave></clave></comando></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">reg query HKLM\Software     # Busca en Registro<br><br>reg add HKLM\Software\Key /v Value /d Data</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: ¡PELIGROSO! Modificar el Registro incorrectamente puede dañar el sistema.</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para configuración avanzada del sistema</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">robocopy</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Copia de archivos robusta y recursiva</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">robocopy <origen> <destino> [opciones]</destino></origen></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">robocopy C:\Users D:\Backup /S /E<br><br>robocopy origen destino /MIR # Espejo exacto</div>
+                        </div>
+                        
+                    <div class="detail-section">
+                        <span class="detail-label">Opciones principales:</span>
+                        <div class="code-block">/S = Copia subcarpetas (vacías no)<br>/E = Copia subcarpetas (vacías sí)<br>/MIR = Espejo (borra en destino si no existe en origen)</div>
+                    </div>
+                
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para backups robustos de carpetas enteras</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">cipher</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Encripta/desencripta archivos (EFS)</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">cipher [opciones] <ruta></ruta></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">cipher /e C:\datos          # Encripta carpeta<br><br>cipher /d C:\datos          # Desencripta carpeta</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para proteger archivos sensibles con EFS</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">certutil</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Gestiona certificados y hashes</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">certutil [opciones]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">certutil -hashfile archivo.exe SHA256<br><br>certutil -dump archivo.cer</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para verificar hashes de archivos</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">whoami</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Muestra el usuario actual y sus permisos</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">whoami [opciones]</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">whoami                      # Usuario actual<br><br>whoami /priv                # Muestra privilegios<br><br>whoami /groups              # Muestra grupos</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para verificar permisos del usuario</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">runas</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Ejecuta un programa como otro usuario</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">runas /user:<usuario> <programa></programa></usuario></div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">runas /user:admin cmd.exe   # Abre CMD como admin<br><br>runas /user:dominio\usuario programa.exe</div>
+                        </div>
+                        
+                        <div class="warning">⚠️ CUIDADO: Pide contraseña del otro usuario</div>
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para ejecutar programas con permisos elevados</p>
+                        </div>
+                    </div>
+                </div>
+            
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">PowerShell pipes</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">Combina comandos para operaciones complejas</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">comando1 | comando2 | comando3</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">Get-Process | Where-Object {$_.CPU -gt 10}<br><br>Get-EventLog -LogName Security | Select-Object -First 10</div>
+                        </div>
+                        
+                        
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">Para operaciones complejas encadenando comandos</p>
+                        </div>
+                    </div>
+                </div>
+            
+                        </div>
+                    </div>
+                </div>
+
+        <div class="tips-section">
+            <h2>💡 Tips Importantes</h2>
+            <ul class="tips-list">
+                <li>Usa Tab - Autocomplete de comandos y rutas</li>
+                <li>Usa Ctrl+C - Detiene comando en ejecución</li>
+                <li>Usa PowerShell - Más poderoso que CMD</li>
+                <li>Usa Arrow Up - Historial de comandos anteriores</li>
+                <li>Combina comandos - Usa pipes (|) en PowerShell</li>
+                <li>Lee documentación - Usa `Get-Help comando` para aprender</li>
+            </ul>
+        </div>
+
+        <div class="next-steps">
+            <h2>📖 Próximos Pasos</h2>
+            <ol>
+                <li>Practica en PowerShell/CMD</li>
+                <li>Experimenta combinando comandos</li>
+                <li>Lee la documentación (`Get-Help`)</li>
+                <li>Usa `tasklist` y `taskkill` para procesos</li>
+                <li>Administra archivos y carpetas</li>
+            </ol>
+            <p style="margin-top: 20px; color: #00d4ff;">¡La práctica es la clave!</p>
+        </div>
+
+        <footer>
+            <p><strong>Autor:</strong> Ezequiel Ayre</p>
+            <p>
+                <a href="https://www.linkedin.com/in/ezequiel-ayre-6b753715b" target="_blank">LinkedIn</a> | 
+                <a href="https://github.com/Ezeayre" target="_blank">GitHub</a>
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        const commands = [
+            // NIVEL BÁSICO
+            {
+                name: "ipconfig",
+                level: "basic",
+                description: "Muestra la configuración de red (IP, puerta de enlace, DNS)",
+                syntax: "ipconfig [opciones]",
+                examples: [
+                    "ipconfig                    # Muestra IP actual",
+                    "ipconfig /all               # Muestra detalles completos",
+                    "ipconfig /release           # Libera IP",
+                    "ipconfig /renew             # Renueva IP"
+                ],
+                options: [
+                    "/all = Muestra detalles completos",
+                    "/release = Libera dirección IP",
+                    "/renew = Renueva dirección IP",
+                    "/flushdns = Limpia caché DNS"
+                ],
+                when: "Siempre que necesites verificar la configuración de red"
+            },
+            {
+                name: "ping",
+                level: "basic",
+                description: "Verifica la conectividad con otro host en la red",
+                syntax: "ping <dirección>",
+                examples: [
+                    "ping google.com              # Verifica conectividad",
+                    "ping 192.168.1.1             # Verifica router",
+                    "ping -t google.com           # Ping continuo (Ctrl+C para detener)"
+                ],
+                when: "Para verificar si un host está accesible"
+            },
+            {
+                name: "tasklist",
+                level: "basic",
+                description: "Lista todos los procesos en ejecución",
+                syntax: "tasklist [opciones]",
+                examples: [
+                    "tasklist                    # Muestra todos los procesos",
+                    "tasklist | findstr chrome    # Busca procesos de Chrome",
+                    "tasklist /v                  # Información detallada"
+                ],
+                when: "Para ver qué aplicaciones están corriendo"
+            },
+            {
+                name: "taskkill",
+                level: "basic",
+                description: "Termina un proceso en ejecución",
+                syntax: "taskkill /IM <nombre> /F",
+                examples: [
+                    "taskkill /IM chrome.exe /F  # Cierra Chrome forzadamente",
+                    "taskkill /PID 1234 /F       # Cierra por ID de proceso",
+                    "taskkill /F /IM notepad.exe # Fuerza cierre"
+                ],
+                warning: "Requiere permisos de administrador. /F fuerza el cierre sin confirmación.",
+                when: "Cuando necesitas cerrar una aplicación que no responde"
+            },
+            {
+                name: "dir",
+                level: "basic",
+                description: "Lista archivos y carpetas de un directorio",
+                syntax: "dir [opciones] [ruta]",
+                examples: [
+                    "dir                         # Lista carpeta actual",
+                    "dir C:\\Users                # Lista contenido de Users",
+                    "dir /s                      # Búsqueda recursiva",
+                    "dir /a                      # Incluye archivos ocultos"
+                ],
+                options: [
+                    "/s = Búsqueda recursiva en subcarpetas",
+                    "/a = Muestra archivos ocultos",
+                    "/w = Formato ancho",
+                    "/p = Pausa después de cada pantalla"
+                ],
+                when: "Constantemente para ver qué hay en carpetas"
+            },
+            {
+                name: "cd",
+                level: "basic",
+                description: "Cambia de directorio (carpeta)",
+                syntax: "cd <ruta>",
+                examples: [
+                    "cd C:\\Windows               # Va a carpeta Windows",
+                    "cd ..                       # Sube un nivel",
+                    "cd \\                        # Va a raíz del disco",
+                    "cd /d D:\\                  # Cambia de unidad"
+                ],
+                when: "Para navegar por el sistema de archivos"
+            },
+            {
+                name: "copy",
+                level: "basic",
+                description: "Copia archivos de un lugar a otro",
+                syntax: "copy <origen> <destino>",
+                examples: [
+                    "copy archivo.txt copia.txt  # Copia archivo",
+                    "copy archivo.txt D:\\backup\\ # Copia a otra carpeta",
+                    "copy *.txt D:\\docs\\        # Copia múltiples archivos"
+                ],
+                when: "Para duplicar archivos o hacer backups"
+            },
+            {
+                name: "del",
+                level: "basic",
+                description: "Elimina archivos",
+                syntax: "del [opciones] <archivo>",
+                examples: [
+                    "del archivo.txt             # Elimina archivo",
+                    "del /P archivo.txt          # Pide confirmación",
+                    "del *.tmp                   # Elimina todos los .tmp"
+                ],
+                warning: "No hay papelera de reciclaje desde CMD. Una vez eliminado, es difícil recuperarlo.",
+                when: "Cuando necesitas eliminar archivos"
+            },
+            {
+                name: "cls",
+                level: "basic",
+                description: "Limpia la pantalla de la consola",
+                syntax: "cls",
+                examples: [
+                    "cls                         # Borra todo el contenido"
+                ],
+                when: "Para limpiar el desorden en la pantalla"
+            },
+            {
+                name: "echo",
+                level: "basic",
+                description: "Imprime texto en pantalla",
+                syntax: "echo <texto>",
+                examples: [
+                    "echo Hola Mundo             # Imprime texto",
+                    "echo %USERNAME%             # Imprime variable de usuario",
+                    "echo texto > archivo.txt    # Guarda texto en archivo"
+                ],
+                when: "Para imprimir texto o guardar información"
+            },
+            // NIVEL INTERMEDIO
+            {
+                name: "netstat",
+                level: "intermediate",
+                description: "Muestra conexiones de red activas y puertos abiertos",
+                syntax: "netstat [opciones]",
+                examples: [
+                    "netstat -an                 # Muestra todas las conexiones",
+                    "netstat -b                  # Incluye nombres de procesos",
+                    "netstat -o                  # Muestra IDs de proceso"
+                ],
+                options: [
+                    "-a = Muestra todas las conexiones",
+                    "-n = Muestra direcciones numéricas",
+                    "-b = Muestra el ejecutable",
+                    "-o = Muestra ID de proceso"
+                ],
+                when: "Para auditoría de seguridad y diagnóstico de red"
+            },
+            {
+                name: "Get-Process",
+                level: "intermediate",
+                description: "Lista procesos (PowerShell)",
+                syntax: "Get-Process [opciones]",
+                examples: [
+                    "Get-Process                 # Muestra todos los procesos",
+                    "Get-Process chrome          # Muestra proceso específico",
+                    "Get-Process | Where-Object {$_.Memory -gt 100MB}"
+                ],
+                when: "PowerShell es más poderoso que tasklist"
+            },
+            {
+                name: "systeminfo",
+                level: "intermediate",
+                description: "Muestra información del sistema (SO, RAM, CPU)",
+                syntax: "systeminfo",
+                examples: [
+                    "systeminfo                  # Información completa",
+                    "systeminfo | findstr /C:\"OS Name\""
+                ],
+                when: "Para auditoría de hardware y configuración"
+            },
+            {
+                name: "wmic",
+                level: "intermediate",
+                description: "Windows Management Instrumentation Command-line",
+                syntax: "wmic <objeto> list",
+                examples: [
+                    "wmic os list brief          # Info del SO",
+                    "wmic logicaldisk list       # Info de discos",
+                    "wmic process list brief      # Lista procesos"
+                ],
+                when: "Herramienta poderosa para administración"
+            },
+            {
+                name: "gpupdate",
+                level: "intermediate",
+                description: "Actualiza las políticas de grupo",
+                syntax: "gpupdate [opciones]",
+                examples: [
+                    "gpupdate /force             # Actualiza políticas inmediatamente"
+                ],
+                warning: "Requiere permisos de administrador",
+                when: "Para aplicar cambios de políticas de grupo"
+            },
+            {
+                name: "nslookup",
+                level: "intermediate",
+                description: "Resuelve nombres de dominio a IP",
+                syntax: "nslookup <dominio>",
+                examples: [
+                    "nslookup google.com         # Encuentra IP de dominio",
+                    "nslookup 8.8.8.8            # DNS inverso"
+                ],
+                when: "Para diagnóstico de DNS"
+            },
+            {
+                name: "tracert",
+                level: "intermediate",
+                description: "Rastrea la ruta de paquetes hasta un host",
+                syntax: "tracert <dirección>",
+                examples: [
+                    "tracert google.com          # Muestra cada salto",
+                    "tracert -d google.com       # No resuelve nombres"
+                ],
+                when: "Para diagnosticar problemas de red"
+            },
+            {
+                name: "netsh advfirewall",
+                level: "intermediate",
+                description: "Gestiona Windows Defender Firewall",
+                syntax: "netsh advfirewall <comando>",
+                examples: [
+                    "netsh advfirewall show allprofiles",
+                    "netsh advfirewall set allprofiles state on"
+                ],
+                warning: "Requiere permisos de administrador",
+                when: "Para configurar el firewall"
+            },
+            {
+                name: "sfc",
+                level: "intermediate",
+                description: "System File Checker - verifica integridad de archivos",
+                syntax: "sfc /scannow",
+                examples: [
+                    "sfc /scannow                # Escanea y repara archivos"
+                ],
+                warning: "Requiere permisos de administrador. Puede tardar tiempo.",
+                when: "Cuando hay problemas con archivos de sistema"
+            },
+            {
+                name: "chkdsk",
+                level: "intermediate",
+                description: "Verifica integridad de disco duro",
+                syntax: "chkdsk <unidad> /F",
+                examples: [
+                    "chkdsk C: /F                # Verifica y repara unidad C:"
+                ],
+                warning: "Requiere permisos de administrador",
+                when: "Para verificar errores de disco"
+            },
+            // NIVEL AVANZADO
+            {
+                name: "Get-EventLog",
+                level: "advanced",
+                description: "Accede a logs del sistema (PowerShell)",
+                syntax: "Get-EventLog -LogName <nombre>",
+                examples: [
+                    "Get-EventLog -LogName System -Newest 10",
+                    "Get-EventLog -LogName Security | Where-Object {$_.EventID -eq 4625}"
+                ],
+                when: "Crítico para forensics y auditoría"
+            },
+            {
+                name: "icacls",
+                level: "advanced",
+                description: "Gestiona permisos de archivos y carpetas",
+                syntax: "icacls <ruta> /grant <usuario>:<permisos>",
+                examples: [
+                    "icacls archivo.txt /grant Admin:F",
+                    "icacls carpeta /grant Usuario:R"
+                ],
+                options: [
+                    "F = Full control (control total)",
+                    "R = Read (lectura)",
+                    "W = Write (escritura)",
+                    "M = Modify (modificar)"
+                ],
+                when: "Para controlar permisos de archivos"
+            },
+            {
+                name: "auditpol",
+                level: "advanced",
+                description: "Configura auditoría de seguridad",
+                syntax: "auditpol /get /category:*",
+                examples: [
+                    "auditpol /get /category:*    # Muestra políticas",
+                    "auditpol /set /subcategory:\"Logon\" /success:enable"
+                ],
+                warning: "Requiere permisos de administrador",
+                when: "Para configurar auditoría de seguridad"
+            },
+            {
+                name: "reg",
+                level: "advanced",
+                description: "Accede y modifica el Registro de Windows",
+                syntax: "reg <comando> <clave>",
+                examples: [
+                    "reg query HKLM\\Software     # Busca en Registro",
+                    "reg add HKLM\\Software\\Key /v Value /d Data"
+                ],
+                warning: "¡PELIGROSO! Modificar el Registro incorrectamente puede dañar el sistema.",
+                when: "Para configuración avanzada del sistema"
+            },
+            {
+                name: "robocopy",
+                level: "advanced",
+                description: "Copia de archivos robusta y recursiva",
+                syntax: "robocopy <origen> <destino> [opciones]",
+                examples: [
+                    "robocopy C:\\Users D:\\Backup /S /E",
+                    "robocopy origen destino /MIR # Espejo exacto"
+                ],
+                options: [
+                    "/S = Copia subcarpetas (vacías no)",
+                    "/E = Copia subcarpetas (vacías sí)",
+                    "/MIR = Espejo (borra en destino si no existe en origen)"
+                ],
+                when: "Para backups robustos de carpetas enteras"
+            },
+            {
+                name: "cipher",
+                level: "advanced",
+                description: "Encripta/desencripta archivos (EFS)",
+                syntax: "cipher [opciones] <ruta>",
+                examples: [
+                    "cipher /e C:\\datos          # Encripta carpeta",
+                    "cipher /d C:\\datos          # Desencripta carpeta"
+                ],
+                when: "Para proteger archivos sensibles con EFS"
+            },
+            {
+                name: "certutil",
+                level: "advanced",
+                description: "Gestiona certificados y hashes",
+                syntax: "certutil [opciones]",
+                examples: [
+                    "certutil -hashfile archivo.exe SHA256",
+                    "certutil -dump archivo.cer"
+                ],
+                when: "Para verificar hashes de archivos"
+            },
+            {
+                name: "whoami",
+                level: "advanced",
+                description: "Muestra el usuario actual y sus permisos",
+                syntax: "whoami [opciones]",
+                examples: [
+                    "whoami                      # Usuario actual",
+                    "whoami /priv                # Muestra privilegios",
+                    "whoami /groups              # Muestra grupos"
+                ],
+                when: "Para verificar permisos del usuario"
+            },
+            {
+                name: "runas",
+                level: "advanced",
+                description: "Ejecuta un programa como otro usuario",
+                syntax: "runas /user:<usuario> <programa>",
+                examples: [
+                    "runas /user:admin cmd.exe   # Abre CMD como admin",
+                    "runas /user:dominio\\usuario programa.exe"
+                ],
+                warning: "Pide contraseña del otro usuario",
+                when: "Para ejecutar programas con permisos elevados"
+            },
+            {
+                name: "PowerShell pipes",
+                level: "advanced",
+                description: "Combina comandos para operaciones complejas",
+                syntax: "comando1 | comando2 | comando3",
+                examples: [
+                    "Get-Process | Where-Object {$_.CPU -gt 10}",
+                    "Get-EventLog -LogName Security | Select-Object -First 10"
+                ],
+                when: "Para operaciones complejas encadenando comandos"
+            }
+        ];
+
+        const searchInput = document.getElementById('searchInput');
+        const commandsContainer = document.getElementById('commandsContainer');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        let currentFilter = 'all';
+
+        function renderCommands(commandsToRender) {
+            if (commandsToRender.length === 0) {
+                commandsContainer.innerHTML = '<div class="no-results">No se encontraron comandos que coincidan con la búsqueda</div>';
+                return;
+            }
+
+            const groupedCommands = {
+                basic: commandsToRender.filter(cmd => cmd.level === 'basic'),
+                intermediate: commandsToRender.filter(cmd => cmd.level === 'intermediate'),
+                advanced: commandsToRender.filter(cmd => cmd.level === 'advanced')
+            };
+
+            let html = '';
+
+            if (groupedCommands.basic.length > 0) {
+                html += `
+                    <div class="level-section">
+                        <h2 class="level-title basic">📚 Nivel Básico</h2>
+                        <div class="commands-grid">
+                            ${groupedCommands.basic.map(cmd => createCommandCard(cmd)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (groupedCommands.intermediate.length > 0) {
+                html += `
+                    <div class="level-section">
+                        <h2 class="level-title intermediate">🔍 Nivel Intermedio</h2>
+                        <div class="commands-grid">
+                            ${groupedCommands.intermediate.map(cmd => createCommandCard(cmd)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (groupedCommands.advanced.length > 0) {
+                html += `
+                    <div class="level-section">
+                        <h2 class="level-title advanced">🔐 Nivel Avanzado</h2>
+                        <div class="commands-grid">
+                            ${groupedCommands.advanced.map(cmd => createCommandCard(cmd)).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            commandsContainer.innerHTML = html;
+
+            // Add click handlers to cards
+            document.querySelectorAll('.command-card').forEach(card => {
+                card.addEventListener('click', function() {
+                    this.classList.toggle('expanded');
+                });
+            });
+        }
+
+        function createCommandCard(cmd) {
+            let optionsHtml = '';
+            if (cmd.options) {
+                optionsHtml = `
+                    <div class="detail-section">
+                        <span class="detail-label">Opciones principales:</span>
+                        <div class="code-block">${cmd.options.join('<br>')}</div>
+                    </div>
+                `;
+            }
+
+            let warningHtml = '';
+            if (cmd.warning) {
+                warningHtml = `<div class="warning">⚠️ CUIDADO: ${cmd.warning}</div>`;
+            }
+
+            return `
+                <div class="command-card">
+                    <div class="command-header">
+                        <span class="command-name">${cmd.name}</span>
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <p class="command-description">${cmd.description}</p>
+                    <div class="command-details">
+                        <div class="detail-section">
+                            <span class="detail-label">Sintaxis:</span>
+                            <div class="code-block">${cmd.syntax}</div>
+                        </div>
+                        <div class="detail-section">
+                            <span class="detail-label">Ejemplos:</span>
+                            <div class="code-block">${cmd.examples.join('<br><br>')}</div>
+                        </div>
+                        ${optionsHtml}
+                        ${warningHtml}
+                        <div class="detail-section">
+                            <span class="detail-label">¿Cuándo lo usas?</span>
+                            <p style="color: #a1a1aa; margin-top: 5px;">${cmd.when}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function filterCommands() {
+            const searchTerm = searchInput.value.toLowerCase();
+            
+            let filtered = commands.filter(cmd => {
+                const matchesSearch = cmd.name.toLowerCase().includes(searchTerm) ||
+                                     cmd.description.toLowerCase().includes(searchTerm) ||
+                                     cmd.syntax.toLowerCase().includes(searchTerm);
+                const matchesFilter = currentFilter === 'all' || cmd.level === currentFilter;
+                return matchesSearch && matchesFilter;
+            });
+
+            renderCommands(filtered);
+        }
+
+        searchInput.addEventListener('input', filterCommands);
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                filterBtns.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                filterCommands();
+            });
+        });
+
+        // Initial render
+        renderCommands(commands);
+    </script>
+
+</body></html>
