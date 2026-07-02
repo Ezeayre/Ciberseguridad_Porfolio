@@ -1,0 +1,1196 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guía de Event IDs Windows - Críticos de memoria + 50 más organizados por severidad">
+    <meta name="keywords" content="event id, windows logs, SOC, auditoría, seguridad">
+    <meta name="author" content="Ezequiel Ayre">
+    <title>Event IDs Windows - Guía SOC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #e4e4e7;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        header p {
+            color: #a1a1aa;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section h2 {
+            color: #00d4ff;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+        }
+
+        .section h3 {
+            color: #7b2cbf;
+            font-size: 1.3rem;
+            margin-top: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section p {
+            margin-bottom: 12px;
+            line-height: 1.8;
+        }
+
+        /* EVENT IDs PRINCIPALES */
+        .memory-section {
+            background: linear-gradient(135deg, rgba(123, 44, 191, 0.1) 0%, rgba(123, 44, 191, 0.05) 100%);
+            border: 1px solid rgba(123, 44, 191, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+        }
+
+        .memory-section h2 {
+            color: #9d4edd;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+
+        .memory-card {
+            background: rgba(0, 0, 0, 0.2);
+            border-left: 3px solid #9d4edd;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            display: inline-block;
+            width: calc(50% - 10px);
+            margin-right: 10px;
+            vertical-align: top;
+            position: relative;
+        }
+
+        .memory-card:nth-child(2n) {
+            margin-right: 0;
+        }
+
+        .memory-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+        }
+
+        .memory-card-id {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #9d4edd;
+        }
+
+        .copy-btn {
+            background: rgba(157, 78, 221, 0.2);
+            border: 1px solid rgba(157, 78, 221, 0.4);
+            color: #9d4edd;
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(157, 78, 221, 0.3);
+            border-color: rgba(157, 78, 221, 0.6);
+        }
+
+        .autocomplete-suggestions {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .autocomplete-suggestions.active {
+            display: block;
+        }
+
+        .autocomplete-item {
+            padding: 10px 15px;
+            cursor: pointer;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
+        }
+
+        .autocomplete-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+        }
+
+        .autocomplete-item:last-child {
+            border-bottom: none;
+        }
+
+        .autocomplete-item-id {
+            font-weight: bold;
+            color: #00d4ff;
+            font-size: 0.95rem;
+        }
+
+        .autocomplete-item-name {
+            color: #a1a1aa;
+            font-size: 0.85rem;
+        }
+
+        .memory-card-name {
+            color: #e4e4e7;
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+
+        .memory-card-desc {
+            color: #a1a1aa;
+            font-size: 0.85rem;
+            margin-top: 3px;
+            line-height: 1.4;
+        }
+
+        /* ACORDEÓN */
+        .accordion-section {
+            margin-bottom: 20px;
+        }
+
+        .accordion-header {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 15px 20px;
+            cursor: pointer;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .accordion-header:hover {
+            background: rgba(0, 212, 255, 0.15);
+        }
+
+        .accordion-header.critical {
+            background: rgba(255, 0, 0, 0.1);
+            border-color: rgba(255, 0, 0, 0.3);
+            color: #ff6b6b;
+        }
+
+        .accordion-header.high {
+            background: rgba(255, 165, 0, 0.1);
+            border-color: rgba(255, 165, 0, 0.3);
+            color: #ffa500;
+        }
+
+        .accordion-header.medium {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: rgba(0, 212, 255, 0.3);
+            color: #00d4ff;
+        }
+
+        .toggle-icon {
+            transition: transform 0.3s;
+            font-size: 1.2rem;
+        }
+
+        .toggle-icon.active {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.active {
+            display: block;
+            max-height: 10000px;
+        }
+
+        .event-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px 12px;
+            margin-bottom: 8px;
+            border-radius: 6px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .event-item.critical {
+            border-left-color: #ff6b6b;
+        }
+
+        .event-item.high {
+            border-left-color: #ffa500;
+        }
+
+        .event-id {
+            font-size: 1rem;
+            font-weight: bold;
+            color: #00d4ff;
+            margin-bottom: 3px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .event-copy-btn {
+            background: rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            color: #00d4ff;
+            padding: 3px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.7rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            margin-left: 10px;
+        }
+
+        .event-copy-btn:hover {
+            background: rgba(0, 212, 255, 0.3);
+            border-color: rgba(0, 212, 255, 0.6);
+        }
+
+        .event-item.critical .event-id {
+            color: #ff6b6b;
+        }
+
+        .event-item.high .event-id {
+            color: #ffa500;
+        }
+
+        .event-name {
+            color: #e4e4e7;
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 4px;
+        }
+
+        .event-desc {
+            color: #a1a1aa;
+            font-size: 0.75rem;
+            line-height: 1.5;
+        }
+
+        /* BUSCADOR Y ANALIZADOR */
+        .tool-section {
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(123, 44, 191, 0.1) 100%);
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .tool-section h2 {
+            color: #00d4ff;
+            margin-bottom: 25px;
+        }
+
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            color: #a1a1aa;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 8px;
+            color: #e4e4e7;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .result-box {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .result-box.active {
+            display: block;
+        }
+
+        .no-results {
+            text-align: center;
+            color: #a1a1aa;
+            padding: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #a1a1aa;
+            margin-top: 40px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Event IDs Windows</h1>
+            <p>Guía SOC con más comunes + 100+ Event IDs organizados por severidad</p>
+            <div style="margin-top: 25px; padding: 20px; background: rgba(0, 212, 255, 0.05); border-radius: 12px; border-left: 3px solid #00d4ff;">
+                <p style="margin: 0; color: #a1a1aa; line-height: 1.6;">
+                    <strong>¿Qué es un Event ID?</strong> Los Event IDs 
+son códigos numéricos que Windows genera para registrar actividades del 
+sistema. Cada evento representa una acción específica (logon, creación 
+de cuenta, modificación de archivo, etc.) y se clasifica por severidad. 
+Los analistas de SOC monitorean estos eventos para detectar actividades 
+sospechosas, intrusiones o comportamientos anómalos en la 
+infraestructura de TI.
+                </p>
+            </div>
+        </header>
+
+        <!-- EVENT IDs PRINCIPALES -->
+        <div class="memory-section">
+            <h2>� Event IDs Principales</h2>
+            <p style="margin-bottom: 15px; color: #a1a1aa; font-size: 0.9rem;">Event IDs con mayor frecuencia de aparición en logs de seguridad:</p>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4624</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4624')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Logon Exitoso</div>
+                <div class="memory-card-desc">Inicio de sesión correcto. El evento más común en logs de seguridad.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4625</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4625')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Logon Fallido</div>
+                <div class="memory-card-desc">Intento de login rechazado. Muy común en entornos corporativos.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4634</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4634')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Logoff</div>
+                <div class="memory-card-desc">Cierre de sesión. Acompaña a 4624 en la mayoría de casos.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4768</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4768')">Copiar</button>
+                </div>
+                <div class="memory-card-name">TGT Kerberos Solicitado</div>
+                <div class="memory-card-desc">Ticket Granting Ticket solicitado. Común en Active Directory.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4769</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4769')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Ticket Kerberos Solicitado</div>
+                <div class="memory-card-desc">Solicitud de ticket de servicio. Muy común en entornos AD.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4770</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4770')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Ticket Kerberos Renovado</div>
+                <div class="memory-card-desc">Renovación de ticket. Ocurre periódicamente en sesiones activas.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4776</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4776')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Validación de Credenciales</div>
+                <div class="memory-card-desc">DC validó credenciales. Común en autenticaciones NTLM.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">5140</div>
+                    <button class="copy-btn" onclick="copyToClipboard('5140')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Share Abierto</div>
+                <div class="memory-card-desc">Acceso a recurso compartido de red. Muy común en file servers.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">5145</div>
+                    <button class="copy-btn" onclick="copyToClipboard('5145')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Acceso a Share Verificado</div>
+                <div class="memory-card-desc">Verificación de permisos en share. Complementa 5140.</div>
+            </div>
+
+            <div class="memory-card">
+                <div class="memory-card-header">
+                    <div class="memory-card-id">4648</div>
+                    <button class="copy-btn" onclick="copyToClipboard('4648')">Copiar</button>
+                </div>
+                <div class="memory-card-name">Logon con Credenciales Delegadas</div>
+                <div class="memory-card-desc">Proceso usó credenciales de otro usuario. RunAs, tareas programadas.</div>
+            </div>
+        </div>
+
+        <!-- ACORDEÓN CON TODOS -->
+        <div class="section">
+            <h2>📋 Event IDs Completo (50+) - Organizados por Severidad</h2>
+
+            <!-- CRÍTICO -->
+            <div class="accordion-section">
+                <div class="accordion-header critical" onclick="toggleAccordion(this)">
+                    🔴 CRÍTICO - Investigar inmediatamente (8)
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>4625</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4625')">Copiar</button>
+                        </div>
+                        <div class="event-name">Logon Fallido</div>
+                        <div class="event-desc">Intento de login rechazado. Múltiples = fuerza bruta.</div>
+                    </div>
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>4776</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4776')">Copiar</button>
+                        </div>
+                        <div class="event-name">Validación de Credenciales Fallida (DC)</div>
+                        <div class="event-desc">Controlador de dominio rechazó credenciales. Ataque contra DC.</div>
+                    </div>
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>1102</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('1102')">Copiar</button>
+                        </div>
+                        <div class="event-name">Registro de Eventos Borrado</div>
+                        <div class="event-desc">Alguien está destruyendo evidencia. ALTAMENTE SOSPECHOSO.</div>
+                    </div>
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>4720</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4720')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cuenta de Usuario Creada</div>
+                        <div class="event-desc">Nueva cuenta. Podría ser backdoor. Verificar autorización.</div>
+                    </div>
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>4728</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4728')">Copiar</button>
+                        </div>
+                        <div class="event-name">Miembro Agregado a Grupo Global</div>
+                        <div class="event-desc">Usuario agregado a grupo privilegiado. Posible escalación.</div>
+                    </div>
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>4732</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4732')">Copiar</button>
+                        </div>
+                        <div class="event-name">Miembro Agregado a Grupo Local</div>
+                        <div class="event-desc">Agregado a grupo local privilegiado. Escalación local.</div>
+                    </div>
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>4771</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4771')">Copiar</button>
+                        </div>
+                        <div class="event-name">Pre-autenticación Kerberos Fallida</div>
+                        <div class="event-desc">Validación Kerberos falló. Múltiples = ataque de contraseña.</div>
+                    </div>
+                    <div class="event-item critical">
+                        <div class="event-id">
+                            <span>4769</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4769')">Copiar</button>
+                        </div>
+                        <div class="event-name">Ticket Kerberos Solicitado</div>
+                        <div class="event-desc">Solicitud de ticket de servicio. Busca Kerberoasting.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ALTO -->
+            <div class="accordion-section">
+                <div class="accordion-header high" onclick="toggleAccordion(this)">
+                    🟠 ALTO - Investigar rápidamente (18)
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4624</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4624')">Copiar</button>
+                        </div>
+                        <div class="event-name">Logon Exitoso</div>
+                        <div class="event-desc">Inicio de sesión correcto. Verificar si es esperado.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4648</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4648')">Copiar</button>
+                        </div>
+                        <div class="event-name">Logon con Credenciales Delegadas</div>
+                        <div class="event-desc">Proceso usó credenciales de otro usuario. RunAs normal.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4722</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4722')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cuenta Habilitada</div>
+                        <div class="event-desc">Se reactivó cuenta deshabilitada. Verificar contexto.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4738</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4738')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cuenta Modificada</div>
+                        <div class="event-desc">Cambios en propiedades de cuenta. Verificar cambios de permisos.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4740</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4740')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cuenta Bloqueada</div>
+                        <div class="event-desc">Cuenta de usuario bloqueada. Protección contra fuerza bruta.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4767</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4767')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cuenta Desbloqueada</div>
+                        <div class="event-desc">Se desbloqueó cuenta. Verificar si fue autorizado.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4768</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4768')">Copiar</button>
+                        </div>
+                        <div class="event-name">Ticket Kerberos TGT Solicitado</div>
+                        <div class="event-desc">Solicitud inicial Kerberos. Análisis de patrones de logon.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4794</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4794')">Copiar</button>
+                        </div>
+                        <div class="event-name">Intento de Cambio de Contraseña</div>
+                        <div class="event-desc">Usuario intentó cambiar contraseña. Verificar si fue exitoso.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4688</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4688')">Copiar</button>
+                        </div>
+                        <div class="event-name">Nuevo Proceso Creado</div>
+                        <div class="event-desc">Nuevo proceso ejecutado. Verificar si es esperado.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4689</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4689')">Copiar</button>
+                        </div>
+                        <div class="event-name">Proceso Terminado</div>
+                        <div class="event-desc">Proceso finalizado. Busca terminaciones anormales.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4723</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4723')">Copiar</button>
+                        </div>
+                        <div class="event-name">Intento de Cambio de Contraseña</div>
+                        <div class="event-desc">Cambio de contraseña iniciado. Verificar legitimidad.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4724</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4724')">Copiar</button>
+                        </div>
+                        <div class="event-name">Intento de Reset de Contraseña</div>
+                        <div class="event-desc">Reset de contraseña iniciado. Verificar autorización.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4725</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4725')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cuenta Deshabilitada</div>
+                        <div class="event-desc">Cuenta desactivada. Verificar si fue autorizado.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4726</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4726')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cuenta Eliminada</div>
+                        <div class="event-desc">Cuenta de usuario eliminada. Impacto importante.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4781</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4781')">Copiar</button>
+                        </div>
+                        <div class="event-name">Nombre de Cuenta Cambió</div>
+                        <div class="event-desc">Se renombró cuenta. Verificar contexto.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4657</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4657')">Copiar</button>
+                        </div>
+                        <div class="event-name">Registro Modificado</div>
+                        <div class="event-desc">Cambios en registro de Windows. Busca persistencia.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4663</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4663')">Copiar</button>
+                        </div>
+                        <div class="event-name">Intento de Acceso a Archivo</div>
+                        <div class="event-desc">Acceso a archivo sensible. Verificar usuario y propósito.</div>
+                    </div>
+                    <div class="event-item high">
+                        <div class="event-id">
+                            <span>4660</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4660')">Copiar</button>
+                        </div>
+                        <div class="event-name">Intento de Eliminar Objeto</div>
+                        <div class="event-desc">Intento de eliminar archivo/recurso. Verificar contexto.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MEDIO -->
+            <div class="accordion-section">
+                <div class="accordion-header medium" onclick="toggleAccordion(this)">
+                    🟡 MEDIO - Monitorear (24)
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>1000</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('1000')">Copiar</button>
+                        </div>
+                        <div class="event-name">Error de Aplicación</div>
+                        <div class="event-desc">Aplicación se comportó de manera inesperada. Busca crashes.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>1001</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('1001')">Copiar</button>
+                        </div>
+                        <div class="event-name">Windows Error Reporting</div>
+                        <div class="event-desc">Reporte de error de Windows. Análisis de problemas.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>6005</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('6005')">Copiar</button>
+                        </div>
+                        <div class="event-name">Inicio de Sistema</div>
+                        <div class="event-desc">Sistema iniciado. Rastrear restarts anormales.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>6006</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('6006')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cierre de Sistema</div>
+                        <div class="event-desc">Sistema apagado. Verificar si fue ordenado.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>7001</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('7001')">Copiar</button>
+                        </div>
+                        <div class="event-name">Inicia Sesión Usuario</div>
+                        <div class="event-desc">Usuario inicia sesión interactiva. Audit de acceso.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>7002</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('7002')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cierra Sesión Usuario</div>
+                        <div class="event-desc">Usuario cierra sesión. Rastrear desconexiones.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4733</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4733')">Copiar</button>
+                        </div>
+                        <div class="event-name">Miembro Removido de Grupo Local</div>
+                        <div class="event-desc">Usuario removido de grupo. Cambios de permisos.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4751</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4751')">Copiar</button>
+                        </div>
+                        <div class="event-name">Grupo Global Changed</div>
+                        <div class="event-desc">Cambios en grupo global. Auditoría de cambios.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4755</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4755')">Copiar</button>
+                        </div>
+                        <div class="event-name">Grupo Universal Cambió</div>
+                        <div class="event-desc">Modificaciones en grupo universal. Rastrear cambios.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4780</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4780')">Copiar</button>
+                        </div>
+                        <div class="event-name">ACL Establecido en Cuenta Administrativa</div>
+                        <div class="event-desc">Cambios en permisos administrativos. IMPORTANTE.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4798</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4798')">Copiar</button>
+                        </div>
+                        <div class="event-name">Miembro Grupo Universal Enumerado</div>
+                        <div class="event-desc">Enumeración de miembros. Posible reconocimiento.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4799</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4799')">Copiar</button>
+                        </div>
+                        <div class="event-name">Miembro Grupo Seguridad Enumerado</div>
+                        <div class="event-desc">Enumeración de grupo de seguridad. Recon.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>5061</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('5061')">Copiar</button>
+                        </div>
+                        <div class="event-name">Operación Criptográfica</div>
+                        <div class="event-desc">Operaciones con certificados. Auditoría de crypto.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4907</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4907')">Copiar</button>
+                        </div>
+                        <div class="event-name">Cambios de Auditoría en Objeto</div>
+                        <div class="event-desc">Modificaciones en configuración de auditoría. Evasión.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4908</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4908')">Copiar</button>
+                        </div>
+                        <div class="event-name">Tabla de Auditoría Especial Modificada</div>
+                        <div class="event-desc">Cambios en políticas de auditoría. Evasión de logs.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4902</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4902')">Copiar</button>
+                        </div>
+                        <div class="event-name">Tabla de Política de Auditoría Creada</div>
+                        <div class="event-desc">Creación de política de auditoría. Configuración.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4658</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4658')">Copiar</button>
+                        </div>
+                        <div class="event-name">Identificador Cerrado</div>
+                        <div class="event-desc">Cierre de identificador a objeto. Auditoría de acceso.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4661</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4661')">Copiar</button>
+                        </div>
+                        <div class="event-name">Identificador Abierto para Acceso</div>
+                        <div class="event-desc">Apertura de identificador a objeto. Rastrear acceso.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4662</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4662')">Copiar</button>
+                        </div>
+                        <div class="event-name">Operación en Objeto Realizada</div>
+                        <div class="event-desc">Operación ejecutada en objeto. Auditoría detallada.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4674</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4674')">Copiar</button>
+                        </div>
+                        <div class="event-name">Operación Privilegiada Realizada</div>
+                        <div class="event-desc">Uso de privilegios. Rastrear abusos.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4782</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4782')">Copiar</button>
+                        </div>
+                        <div class="event-name">Hash de Contraseña Accedido</div>
+                        <div class="event-desc">Acceso a hash de contraseña. Posible robo.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4818</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4818')">Copiar</button>
+                        </div>
+                        <div class="event-name">Acceso Propuesto Denegado</div>
+                        <div class="event-desc">Acceso rechazado por permisos. Operación denegada.</div>
+                    </div>
+                    <div class="event-item">
+                        <div class="event-id">
+                            <span>4816</span>
+                            <button class="event-copy-btn" onclick="copyToClipboard('4816')">Copiar</button>
+                        </div>
+                        <div class="event-name">Operación de Auditoría RPC Detectada</div>
+                        <div class="event-desc">RPC auditado. Rastrear acceso remoto.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BUSCADOR -->
+        <div class="tool-section">
+            <h2>🔍 Buscador Rápido de Event IDs</h2>
+            <p style="margin-bottom: 20px;">Ingresa un Event ID para obtener información detallada:</p>
+            
+            <div class="form-group">
+                <label>Event ID</label>
+                <input type="text" id="searchInput" placeholder="Ej: 4625, 1102, 4728..." onkeyup="buscarEventID()" autocomplete="off">
+                <div class="autocomplete-suggestions" id="autocompleteSuggestions"></div>
+            </div>
+
+            <div class="result-box" id="searchResult">
+                <div id="searchContent"></div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Guía de Event IDs Windows</strong> | Autor: Ezequiel Ayre</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            header.classList.toggle('active');
+            content.classList.toggle('active');
+            header.querySelector('.toggle-icon').classList.toggle('active');
+        }
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                const searchInput = document.getElementById('searchInput');
+                searchInput.value = text;
+                buscarEventID();
+            });
+        }
+
+        const allEventIDs = {
+            '4624': { nombre: 'Logon Exitoso', severidad: 'high', descripcion: 'Inicio de sesión correcto. Verifica tipo de logon y usuario.', response: '1. Verificar tipo de logon (Type 2=interactivo, 3=red, 10=remoto). 2. Verificar usuario y origen IP. 3. Validar horario del acceso. 4. Si es remoto: verificar VPN o acceso autorizado.' },
+            '4625': { nombre: 'Logon Fallido', severidad: 'critical', descripcion: 'Intento de login rechazado. Múltiples = fuerza bruta.', response: '1. Buscar múltiples intentos del mismo usuario/IP. 2. Verificar Status Code (0xC000006A=password incorrecto). 3. Verificar origen geográfico. 4. Si es fuerza bruta: bloquear IP y notificar.' },
+            '4634': { nombre: 'Logoff', severidad: 'medium', descripcion: 'Cierre de sesión de usuario.' },
+            '4647': { nombre: 'Logon Iniciado', severidad: 'medium', descripcion: 'Usuario inició proceso de logon.' },
+            '4648': { nombre: 'Logon con Credenciales Delegadas', severidad: 'high', descripcion: 'Proceso usó credenciales de otro usuario.', response: '1. Verificar qué proceso inició el logon. 2. Validar Target UserName y Source UserName. 3. Verificar si es RunAs legítimo o sospechoso. 4. Investigar si es lateral movement.' },
+            '4649': { nombre: 'Replay Detectado', severidad: 'critical', descripcion: 'Detectado replay attack en credenciales.', response: '1. Verificar origen del replay attack. 2. Buscar otros eventos del mismo usuario. 3. Revocar credenciales comprometidas. 4. Investigar posible compromiso de cuenta.' },
+            '4672': { nombre: 'Privilegios Especiales Asignados', severidad: 'high', descripcion: 'Usuario obtuvo privilegios administrativos.', response: '1. Verificar qué privilegios fueron asignados. 2. Validar si el cambio fue autorizado. 3. Investigar actividad posterior del usuario. 4. Revisar logs de Account Management.' },
+            '4675': { nombre: 'Privilegios Solicitados', severidad: 'medium', descripcion: 'Solicitud de privilegios específicos.' },
+            '4768': { nombre: 'TGT Kerberos Solicitado', severidad: 'high', descripcion: 'Ticket Granting Ticket solicitado.', response: '1. Verificar usuario y servicio solicitado. 2. Buscar patrones de TGT requests. 3. Validar si es comportamiento normal. 4. Investigar posibles Golden Ticket attacks.' },
+            '4769': { nombre: 'Ticket Kerberos Solicitado', severidad: 'high', descripcion: 'Solicitud de ticket de servicio.', response: '1. Verificar Service Name y usuario. 2. Buscar múltiples requests del mismo servicio. 3. Investigar Kerberoasting (SPNs con privilegios). 4. Validar si el acceso es legítimo.' },
+            '4770': { nombre: 'Ticket Kerberos Renovado', severidad: 'medium', descripcion: 'Renovación de ticket existente.' },
+            '4771': { nombre: 'Pre-autenticación Kerberos Fallida', severidad: 'critical', descripcion: 'Fallo en pre-auth Kerberos. Posible ataque.', response: '1. Buscar múltiples fallos del mismo usuario. 2. Verificar Failure Code (0x18=pre-auth failed). 3. Investigar password spraying. 4. Si es sospechoso: forzar cambio de contraseña.' },
+            '4772': { nombre: 'Validación de Credenciales Fallida', severidad: 'high', descripcion: 'Fallo en validación de credenciales.', response: '1. Verificar usuario y origen. 2. Buscar patrones de fallos repetidos. 3. Validar si es error legítimo o ataque. 4. Monitorear actividad posterior.' },
+            '4773': { nombre: 'Validación de Credenciales Exitosa', severidad: 'medium', descripcion: 'Validación de credenciales exitosa.' },
+            '4774': { nombre: 'Cuenta Mapeada', severidad: 'medium', descripcion: 'Cuenta mapeada para logon.' },
+            '4775': { nombre: 'Cuenta No Mapeada', severidad: 'medium', descripcion: 'No se pudo mapear cuenta.' },
+            '4776': { nombre: 'Validación de Credenciales (DC)', severidad: 'high', descripcion: 'DC validó credenciales (NTLM).', response: '1. Verificar Workstation Name y origen. 2. Buscar fallos repetidos del mismo usuario. 3. Investigar NTLM attacks. 4. Validar si el acceso es legítimo.' },
+            '4778': { nombre: 'Sesión Reconectada', severidad: 'medium', descripcion: 'Sesión reconectada al servidor.' },
+            '4779': { nombre: 'Sesión Desconectada', severidad: 'medium', descripcion: 'Sesión desconectada del servidor.' },
+            '4800': { nombre: 'Computadora Bloqueada', severidad: 'medium', descripcion: 'Estación de trabajo bloqueada.' },
+            '4801': { nombre: 'Computadora Desbloqueada', severidad: 'medium', descripcion: 'Estación de trabajo desbloqueada.' },
+            '4802': { nombre: 'Protector de Pantalla Activado', severidad: 'low', descripcion: 'Protector de pantalla iniciado.' },
+            '4803': { nombre: 'Protector de Pantalla Desactivado', severidad: 'low', descripcion: 'Protector de pantalla desactivado.' },
+            '4720': { nombre: 'Cuenta de Usuario Creada', severidad: 'critical', descripcion: 'Nueva cuenta de usuario creada.', response: '1. Verificar quién creó la cuenta (Subject). 2. Validar si fue autorizado. 3. Investigar si es backdoor. 4. Monitorear actividad de la nueva cuenta.' },
+            '4722': { nombre: 'Cuenta Habilitada', severidad: 'high', descripcion: 'Cuenta de usuario habilitada.', response: '1. Verificar quién habilitó la cuenta. 2. Validar autorización. 3. Investigar por qué estaba deshabilitada. 4. Monitorear actividad posterior.' },
+            '4723': { nombre: 'Intento Cambio Contraseña', severidad: 'high', descripcion: 'Usuario intentó cambiar contraseña.', response: '1. Verificar si el cambio fue exitoso. 2. Validar autorización del cambio. 3. Investigar si fue forzado. 4. Monitorear actividad posterior.' },
+            '4724': { nombre: 'Intento Reset Contraseña', severidad: 'high', descripcion: 'Intento de reset de contraseña.', response: '1. Verificar quién inició el reset. 2. Validar autorización. 3. Investigar si es account takeover. 4. Notificar al usuario si es sospechoso.' },
+            '4725': { nombre: 'Cuenta Deshabilitada', severidad: 'high', descripcion: 'Cuenta de usuario deshabilitada.', response: '1. Verificar quién deshabilitó la cuenta. 2. Validar autorización. 3. Investigar motivo. 4. Asegurar que no sea evasión.' },
+            '4726': { nombre: 'Cuenta Eliminada', severidad: 'high', descripcion: 'Cuenta de usuario eliminada.', response: '1. Verificar quién eliminó la cuenta. 2. Validar autorización. 3. Investigar si es destruction of evidence. 4. Revisar logs de Account Management.' },
+            '4728': { nombre: 'Miembro Agregado a Grupo Global', severidad: 'critical', descripcion: 'Usuario agregado a grupo global.', response: '1. Verificar quién agregó al usuario. 2. Validar autorización. 3. Investigar si es privilege escalation. 4. Revisar permisos del grupo.' },
+            '4729': { nombre: 'Miembro Removido de Grupo Global', severidad: 'medium', descripcion: 'Usuario removido de grupo global.' },
+            '4730': { nombre: 'Grupo Global Deshabilitado', severidad: 'medium', descripcion: 'Grupo global deshabilitado.' },
+            '4731': { nombre: 'Grupo Local Habilitado', severidad: 'medium', descripcion: 'Grupo local habilitado.' },
+            '4732': { nombre: 'Miembro Agregado a Grupo Local', severidad: 'critical', descripcion: 'Usuario agregado a grupo local.', response: '1. Verificar quién agregó al usuario. 2. Validar autorización. 3. Investigar privilege escalation local. 4. Revisar actividad del usuario.' },
+            '4733': { nombre: 'Miembro Removido de Grupo Local', severidad: 'medium', descripcion: 'Usuario removido de grupo local.' },
+            '4734': { nombre: 'Grupo Local Deshabilitado', severidad: 'medium', descripcion: 'Grupo local deshabilitado.' },
+            '4735': { nombre: 'Grupo Local Cambiado', severidad: 'medium', descripcion: 'Grupo local modificado.' },
+            '4737': { nombre: 'Grupo Global Cambiado', severidad: 'medium', descripcion: 'Grupo global modificado.' },
+            '4738': { nombre: 'Cuenta Modificada', severidad: 'high', descripcion: 'Propiedades de cuenta cambiadas.', response: '1. Verificar qué propiedades cambiaron. 2. Validar autorización del cambio. 3. Investigar si es account manipulation. 4. Monitorear actividad posterior.' },
+            '4740': { nombre: 'Cuenta Bloqueada', severidad: 'high', descripcion: 'Cuenta bloqueada por múltiples fallos.', response: '1. Verificar si es fuerza bruta. 2. Investigar origen de los fallos. 3. Validar si el bloqueo es legítimo. 4. Considerar desbloqueo solo si es autorizado.' },
+            '4741': { nombre: 'Cuenta de Computadora Cambiada', severidad: 'medium', descripcion: 'Propiedades de cuenta de computadora cambiadas.' },
+            '4742': { nombre: 'Cuenta de Computadora Cambiada', severidad: 'medium', descripcion: 'Cuenta de computadora modificada.' },
+            '4743': { nombre: 'Cuenta de Computadora Eliminada', severidad: 'high', descripcion: 'Cuenta de computadora eliminada.', response: '1. Verificar quién eliminó la cuenta. 2. Validar autorización. 3. Investigar si es destruction. 4. Revisar logs de Account Management.' },
+            '4756': { nombre: 'Miembro Agregado a Grupo Universal', severidad: 'medium', descripcion: 'Usuario agregado a grupo universal.' },
+            '4757': { nombre: 'Miembro Removido de Grupo Universal', severidad: 'medium', descripcion: 'Usuario removido de grupo universal.' },
+            '4758': { nombre: 'Grupo Universal Cambiado', severidad: 'medium', descripcion: 'Grupo universal modificado.' },
+            '4767': { nombre: 'Cuenta Desbloqueada', severidad: 'high', descripcion: 'Cuenta de usuario desbloqueada.', response: '1. Verificar quién desbloqueó la cuenta. 2. Validar autorización. 3. Investigar si es attacker bypassing locks. 4. Monitorear actividad posterior.' },
+            '4780': { nombre: 'ACL Establecido en Cuenta Admin', severidad: 'high', descripcion: 'Cambios en permisos administrativos.', response: '1. Verificar quién modificó los permisos. 2. Validar autorización. 3. Investigar privilege escalation. 4. Revisar cambios de ACL.' },
+            '4781': { nombre: 'Nombre de Cuenta Cambió', severidad: 'high', descripcion: 'Cuenta renombrada.', response: '1. Verificar quién renombró la cuenta. 2. Validar autorización. 3. Investigar si es account hiding. 4. Monitorear actividad de la cuenta renombrada.' },
+            '4782': { nombre: 'Hash de Contraseña Accedido', severidad: 'critical', descripcion: 'Acceso a hash de contraseña.', response: '1. INVESTIGACIÓN INMEDIATA - Posible credential theft. 2. Verificar qué proceso accedió al hash. 3. Revocar credenciales comprometidas. 4. Escalar a equipo de seguridad.' },
+            '4793': { nombre: 'Intento de Cambio de Contraseña', severidad: 'high', descripcion: 'Intento de cambio de contraseña.', response: '1. Verificar si el cambio fue exitoso. 2. Validar autorización. 3. Investigar si es account manipulation. 4. Monitorear actividad posterior.' },
+            '4794': { nombre: 'Intento de Cambio de Contraseña', severidad: 'high', descripcion: 'Intento de cambio de contraseña.', response: '1. Verificar si el cambio fue exitoso. 2. Validar autorización. 3. Investigar si es account manipulation. 4. Monitorear actividad posterior.' },
+            '4798': { nombre: 'Miembro Grupo Universal Enumerado', severidad: 'medium', descripcion: 'Enumeración de grupo universal.' },
+            '4799': { nombre: 'Miembro Grupo Seguridad Enumerado', severidad: 'medium', descripcion: 'Enumeración de grupo de seguridad.' },
+            '4656': { nombre: 'Handle a Objeto Solicitado', severidad: 'medium', descripcion: 'Solicitud de handle a objeto.' },
+            '4657': { nombre: 'Registro Modificado', severidad: 'high', descripcion: 'Cambios en registro de Windows.', response: '1. Verificar qué clave de registro fue modificada. 2. Validar proceso que hizo el cambio. 3. Investigar si es persistence mechanism. 4. Revisar cambios de configuración.' },
+            '4658': { nombre: 'Handle a Objeto Cerrado', severidad: 'medium', descripcion: 'Handle a objeto cerrado.' },
+            '4660': { nombre: 'Intento de Eliminar Objeto', severidad: 'high', descripcion: 'Intento de eliminar objeto.', response: '1. Verificar qué objeto se intentó eliminar. 2. Validar proceso y usuario. 3. Investigar si es destruction of evidence. 4. Monitorear actividad posterior.' },
+            '4661': { nombre: 'Handle Abierto para Acceso', severidad: 'medium', descripcion: 'Handle abierto para acceso.' },
+            '4662': { nombre: 'Operación en Objeto Realizada', severidad: 'medium', descripcion: 'Operación ejecutada en objeto.' },
+            '4663': { nombre: 'Intento de Acceso a Objeto', severidad: 'high', descripcion: 'Intento de acceso a archivo/objeto.', response: '1. Verificar qué archivo/objeto fue accedido. 2. Validar usuario y permisos. 3. Investigar si es data exfiltration. 4. Monitorear patrones de acceso.' },
+            '4674': { nombre: 'Operación Privilegiada Realizada', severidad: 'high', descripcion: 'Uso de privilegios especiales.', response: '1. Verificar qué privilegio fue usado. 2. Validar proceso y usuario. 3. Investigar privilege abuse. 4. Monitorear actividad posterior.' },
+            '5140': { nombre: 'Share Abierto', severidad: 'medium', descripcion: 'Acceso a recurso compartido de red.' },
+            '5143': { nombre: 'Share Cerrado', severidad: 'medium', descripcion: 'Recurso compartido cerrado.' },
+            '5144': { nombre: 'Share Eliminado', severidad: 'high', descripcion: 'Recurso compartido eliminado.', response: '1. Verificar quién eliminó el share. 2. Validar autorización. 3. Investigar si es destruction. 4. Revisar logs de Object Access.' },
+            '5145': { nombre: 'Acceso a Share Verificado', severidad: 'medium', descripcion: 'Verificación de permisos en share.' },
+            '5168': { nombre: 'Share Modificado', severidad: 'medium', descripcion: 'Recurso compartido modificado.' },
+            '4688': { nombre: 'Nuevo Proceso Creado', severidad: 'high', descripcion: 'Nuevo proceso ejecutado.', response: '1. Verificar qué proceso fue creado. 2. Validar Command Line. 3. Investigar si es malware o herramienta de admin. 4. Verificar parent process.' },
+            '4689': { nombre: 'Proceso Terminado', severidad: 'medium', descripcion: 'Proceso finalizado.' },
+            '4690': { nombre: 'Proceso Detenido', severidad: 'medium', descripcion: 'Proceso detenido.' },
+            '4696': { nombre: 'Handle Primario Duplicado', severidad: 'medium', descripcion: 'Duplicación de handle primario.' },
+            '4698': { nombre: 'Tarea Programada Creada', severidad: 'high', descripcion: 'Nueva tarea programada creada.', response: '1. Verificar qué tarea fue creada. 2. Validar Command Line y triggers. 3. Investigar si es persistence mechanism. 4. Monitorear ejecución de la tarea.' },
+            '4699': { nombre: 'Tarea Programada Eliminada', severidad: 'high', descripcion: 'Tarea programada eliminada.', response: '1. Verificar quién eliminó la tarea. 2. Validar autorización. 3. Investigar si es destruction of evidence. 4. Revisar logs de Scheduled Tasks.' },
+            '4700': { nombre: 'Tarea Programada Habilitada', severidad: 'medium', descripcion: 'Tarea programada habilitada.' },
+            '4701': { nombre: 'Tarea Programada Deshabilitada', severidad: 'medium', descripcion: 'Tarea programada deshabilitada.' },
+            '4702': { nombre: 'Tarea Programada Actualizada', severidad: 'medium', descripcion: 'Tarea programada actualizada.' },
+            '4703': { nombre: 'Política de Derechos de Usuario Modificada', severidad: 'high', descripcion: 'Cambios en derechos de usuario.', response: '1. Verificar qué derechos fueron modificados. 2. Validar autorización. 3. Investigar privilege escalation. 4. Revisar impactos en seguridad.' },
+            '4704': { nombre: 'Política de Auditoría Modificada', severidad: 'high', descripcion: 'Cambios en política de auditoría.', response: '1. Verificar qué política fue modificada. 2. Validar autorización. 3. Investigar si es evasion de logs. 4. Revisar configuración de auditoría.' },
+            '4705': { nombre: 'Política de Trust Modificada', severidad: 'high', descripcion: 'Cambios en política de trust.', response: '1. Verificar qué trust fue modificado. 2. Validar autorización. 3. Investigar lateral movement. 4. Revisar configuración de trust.' },
+            '4706': { nombre: 'Dominio Trust Creado', severidad: 'high', descripcion: 'Nuevo trust de dominio creado.', response: '1. Verificar quién creó el trust. 2. Validar autorización. 3. Investigar si es lateral movement setup. 4. Revisar configuración de trust.' },
+            '4707': { nombre: 'Dominio Trust Eliminado', severidad: 'high', descripcion: 'Trust de dominio eliminado.', response: '1. Verificar quién eliminó el trust. 2. Validar autorización. 3. Investigar si es destruction. 4. Revisar configuración de trust.' },
+            '4713': { nombre: 'Política de Kerberos Modificada', severidad: 'high', descripcion: 'Cambios en política Kerberos.', response: '1. Verificar qué política Kerberos fue modificada. 2. Validar autorización. 3. Investigar si es weakening de seguridad. 4. Revisar configuración Kerberos.' },
+            '4715': { nombre: 'Política de Auditoría del Sistema Modificada', severidad: 'high', descripcion: 'Cambios en auditoría del sistema.', response: '1. Verificar qué política fue modificada. 2. Validar autorización. 3. Investigar si es evasion. 4. Revisar configuración de auditoría.' },
+            '4716': { nombre: 'Política de Trust Modificada', severidad: 'high', descripcion: 'Cambios en política de trust.', response: '1. Verificar qué trust fue modificado. 2. Validar autorización. 3. Investigar lateral movement. 4. Revisar configuración de trust.' },
+            '4717': { nombre: 'Política de Auditoría del Sistema Modificada', severidad: 'high', descripcion: 'Cambios en auditoría del sistema.', response: '1. Verificar qué política fue modificada. 2. Validar autorización. 3. Investigar si es evasion. 4. Revisar configuración de auditoría.' },
+            '4718': { nombre: 'Política de Auditoría del Sistema Modificada', severidad: 'high', descripcion: 'Cambios en auditoría del sistema.', response: '1. Verificar qué política fue modificada. 2. Validar autorización. 3. Investigar si es evasion. 4. Revisar configuración de auditoría.' },
+            '4719': { nombre: 'Política de Auditoría del Sistema Modificada', severidad: 'high', descripcion: 'Cambios en auditoría del sistema.', response: '1. Verificar qué política fue modificada. 2. Validar autorización. 3. Investigar si es evasion. 4. Revisar configuración de auditoría.' },
+            '1102': { nombre: 'Registro de Eventos Borrado', severidad: 'critical', descripcion: 'Registro de eventos borrado.', response: '1. INVESTIGACIÓN INMEDIATA - Destruction of evidence. 2. Verificar quién borró los logs. 3. Investigar actividad previa al borrado. 4. Escalar a equipo de seguridad.' },
+            '1100': { nombre: 'Registro de Eventos Iniciado', severidad: 'medium', descripcion: 'Servicio de registro iniciado.' },
+            '1101': { nombre: 'Registro de Eventos Detenido', severidad: 'medium', descripcion: 'Servicio de registro detenido.' },
+            '1104': { nombre: 'Registro de Eventos Borrado', severidad: 'critical', descripcion: 'Registro de eventos borrado.', response: '1. INVESTIGACIÓN INMEDIATA - Destruction of evidence. 2. Verificar quién borró los logs. 3. Investigar actividad previa al borrado. 4. Escalar a equipo de seguridad.' },
+            '1105': { nombre: 'Registro de Eventos Cargado', severidad: 'medium', descripcion: 'Archivo de registro cargado.' },
+            '1108': { nombre: 'Registro de Eventos Guardado', severidad: 'medium', descripcion: 'Archivo de registro guardado.' },
+            '6005': { nombre: 'Inicio de Sistema', severidad: 'medium', descripcion: 'Sistema iniciado.' },
+            '6006': { nombre: 'Cierre de Sistema', severidad: 'medium', descripcion: 'Sistema apagado.' },
+            '6008': { nombre: 'Cierre Inesperado', severidad: 'high', descripcion: 'Sistema se apagó inesperadamente.', response: '1. Verificar causa del cierre inesperado. 2. Investigar si es BSOD o power issue. 3. Revisar logs de System. 4. Monitorear estabilidad del sistema.' },
+            '6009': { nombre: 'Información de Sistema', severidad: 'low', descripcion: 'Información del sistema.' },
+            '6013': { nombre: 'Uptime del Sistema', severidad: 'low', descripcion: 'Tiempo de funcionamiento del sistema.' },
+            '41': { nombre: 'Kernel-Power - Reinicio', severidad: 'critical', descripcion: 'Sistema se reinició sin apagado limpio.', response: '1. Verificar causa del reinicio. 2. Investigar si es BSOD o power failure. 3. Revisar dump files si existen. 4. Monitorear estabilidad del sistema.' },
+            '1000': { nombre: 'Error de Aplicación', severidad: 'medium', descripcion: 'Aplicación falló.' },
+            '1001': { nombre: 'Windows Error Reporting', severidad: 'medium', descripcion: 'Reporte de error de Windows.' },
+            '1002': { nombre: 'Application Hang', severidad: 'medium', descripcion: 'Aplicación dejó de responder.' },
+            '1003': { nombre: 'Application Error', severidad: 'medium', descripcion: 'Error de aplicación.' },
+            '1004': { nombre: 'Application Error', severidad: 'medium', descripcion: 'Error de aplicación.' },
+            '1008': { nombre: 'Per-User Installs', severidad: 'low', descripcion: 'Instalación por usuario.' },
+            '1009': { nombre: 'Process Exit', severidad: 'medium', descripcion: 'Proceso terminó.' },
+            '1010': { nombre: 'Process Start', severidad: 'medium', descripcion: 'Proceso iniciado.' },
+            '1023': { nombre: 'Application Error', severidad: 'medium', descripcion: 'Error de aplicación.' },
+            '1024': { nombre: 'Application Error', severidad: 'medium', descripcion: 'Error de aplicación.' },
+            '400': { nombre: 'Engine State', severidad: 'low', descripcion: 'Estado del motor PowerShell.' },
+            '403': { nombre: 'Pipeline Execution', severidad: 'medium', descripcion: 'Ejecución de pipeline.' },
+            '4100': { nombre: 'Block Logging', severidad: 'medium', descripcion: 'Logging de bloques.' },
+            '4103': { nombre: 'Module Logging', severidad: 'medium', descripcion: 'Logging de módulos.' },
+            '4104': { nombre: 'Script Block Logging', severidad: 'high', descripcion: 'Logging de bloques de script.', response: '1. Verificar el script ejecutado. 2. Analizar Command Line. 3. Investigar si es malware o herramienta de admin. 4. Monitorear actividad posterior.' },
+            '4105': { nombre: 'Script Block Logging Start', severidad: 'medium', descripcion: 'Inicio de logging de script.' },
+            '4106': { nombre: 'Script Block Logging Stop', severidad: 'medium', descripcion: 'Fin de logging de script.' },
+            '800': { nombre: 'PowerShell Module', severidad: 'medium', descripcion: 'Módulo PowerShell.' },
+            '5861': { nombre: 'WMI Activity', severidad: 'medium', descripcion: 'Actividad WMI.' },
+            '7001': { nombre: 'Inicia Sesión Usuario', severidad: 'medium', descripcion: 'Usuario inicia sesión interactiva.' },
+            '7002': { nombre: 'Cierra Sesión Usuario', severidad: 'medium', descripcion: 'Usuario cierra sesión.' },
+            '4751': { nombre: 'Grupo Global Changed', severidad: 'medium', descripcion: 'Cambios en grupo global.' },
+            '4755': { nombre: 'Grupo Universal Cambió', severidad: 'medium', descripcion: 'Cambios en grupo universal.' },
+            '4902': { nombre: 'Tabla de Política de Auditoría Creada', severidad: 'medium', descripcion: 'Creación de política de auditoría.' },
+            '4904': { nombre: 'Intento de Registro de Eventos', severidad: 'medium', descripcion: 'Intento de registrar evento.' },
+            '4905': { nombre: 'Intento de Registro de Eventos', severidad: 'medium', descripcion: 'Intento de registrar evento.' },
+            '4906': { nombre: 'CrashOnAuditFail Modificado', severidad: 'medium', descripcion: 'Configuración de crash modificada.' },
+            '4907': { nombre: 'Auditoría en Objeto Modificada', severidad: 'medium', descripcion: 'Auditoría de objeto modificada.' },
+            '4908': { nombre: 'Tabla de Auditoría Especial Modificada', severidad: 'medium', descripcion: 'Tabla de auditoría especial modificada.' },
+            '4912': { nombre: 'Política de Restricción Per-User Modificada', severidad: 'medium', descripcion: 'Política de restricción por usuario modificada.' },
+            '5061': { nombre: 'Operación Criptográfica', severidad: 'medium', descripcion: 'Operaciones con certificados.' },
+            '4816': { nombre: 'Operación de Auditoría RPC', severidad: 'medium', descripcion: 'RPC auditado.' },
+            '4817': { nombre: 'Acceso Remoto IP', severidad: 'medium', descripcion: 'Acceso desde IP remota.' },
+            '4818': { nombre: 'Acceso Propuesto Denegado', severidad: 'medium', descripcion: 'Acceso denegado por permisos.' },
+        };
+
+        function buscarEventID() {
+            const eventID = document.getElementById('searchInput').value.trim();
+            const resultBox = document.getElementById('searchResult');
+            const resultContent = document.getElementById('searchContent');
+            const suggestionsBox = document.getElementById('autocompleteSuggestions');
+
+            // Autocomplete - mostrar sugerencias mientras escribe
+            if (eventID.length > 0) {
+                const matches = Object.keys(allEventIDs).filter(id => id.startsWith(eventID));
+                if (matches.length > 0) {
+                    suggestionsBox.innerHTML = matches.map(id => `
+                        <div class="autocomplete-item" onclick="selectEventID('${id}')">
+                            <span class="autocomplete-item-id">${id}</span>
+                            <span class="autocomplete-item-name">${allEventIDs[id].nombre}</span>
+                        </div>
+                    `).join('');
+                    suggestionsBox.classList.add('active');
+                } else {
+                    suggestionsBox.classList.remove('active');
+                }
+            } else {
+                suggestionsBox.classList.remove('active');
+            }
+
+            if (!eventID) {
+                resultBox.classList.remove('active');
+                return;
+            }
+
+            const evento = allEventIDs[eventID];
+
+            if (evento) {
+                const severidadColor = evento.severidad === 'critical' ? '#ff6b6b' : 
+                                     evento.severidad === 'high' ? '#ffa500' : '#00d4ff';
+                let responseHTML = '';
+                if (evento.response) {
+                    const steps = evento.response.split('. ');
+                    const stepsList = steps.map(step => step.trim()).filter(step => step.length > 0);
+                    responseHTML = `
+                        <div style="margin-top: 20px; padding: 15px; background: rgba(0, 212, 255, 0.08); border-radius: 8px; border-left: 3px solid #00d4ff;">
+                            <h4 style="color: #00d4ff; margin: 0 0 10px 0; font-size: 1rem;">📋 Response Playbook</h4>
+                            <ul style="margin: 0; padding-left: 20px; color: #e4e4e7; line-height: 1.8;">
+                                ${stepsList.map(step => `<li>${step}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+                resultBox.classList.add('active');
+                resultContent.innerHTML = `
+                    <h3>Event ID ${eventID}</h3>
+                    <p style="margin: 10px 0;"><strong>Nombre:</strong> ${evento.nombre}</p>
+                    <p style="margin: 10px 0;"><strong>Severidad:</strong> <span style="color: ${severidadColor}; font-weight: bold;">${evento.severidad.toUpperCase()}</span></p>
+                    <p style="margin: 10px 0;"><strong>Descripción:</strong> ${evento.descripcion}</p>
+                    ${responseHTML}
+                `;
+            } else {
+                resultBox.classList.add('active');
+                resultContent.innerHTML = '<div class="no-results">Event ID no encontrado en la base de datos. Búscalo en documentación oficial de Microsoft.</div>';
+            }
+        }
+
+        function selectEventID(id) {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = id;
+            buscarEventID();
+        }
+    </script>
+
+</body></html>
