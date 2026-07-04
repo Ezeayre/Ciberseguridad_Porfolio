@@ -66,6 +66,25 @@
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+
+        .section h2::after {
+            content: "▼";
+            font-size: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .section.collapsed h2::after {
+            transform: rotate(-90deg);
+        }
+
+        .section.collapsed > *:not(h2) {
+            display: none;
         }
 
         .section h3 {
@@ -311,6 +330,18 @@
             border: 1px solid rgba(0, 212, 255, 0.3);
         }
 
+        .badge-success {
+            background: rgba(39, 174, 96, 0.2);
+            color: #27ae60;
+            border: 1px solid rgba(39, 174, 96, 0.3);
+        }
+
+        .badge-info {
+            background: rgba(52, 152, 219, 0.2);
+            color: #3498db;
+            border: 1px solid rgba(52, 152, 219, 0.3);
+        }
+
         .copy-message {
             position: fixed;
             top: 20px;
@@ -364,14 +395,17 @@
 </head>
 <body>
     <div class="container">
-        <header>
+        <header style="position: relative;">
+            <a href="http://192.168.172.1:8100/index.html" style="position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; color: #00d4ff; text-decoration: none; font-size: 0.95rem; padding: 8px 12px; border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 6px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(0, 212, 255, 0.1)'" onmouseout="this.style.background='transparent'">
+                ← Volver al Portafolio
+            </a>
             <h1>📋 Tickets en SOC</h1>
             <p>Guía completa e interactiva sobre documentación de incidentes de seguridad</p>
         </header>
 
         <!-- ¿QUÉ ES UN TICKET? -->
         <div class="section">
-            <h2>¿Qué es un Ticket?</h2>
+            <h2 onclick="this.parentElement.classList.toggle('collapsed')">¿Qué es un Ticket?</h2>
             <p>Un <strong>ticket</strong> es un registro documentado de un problema o incidente que necesita ser resuelto. Es tu <strong>prueba auditable</strong> de que detectaste, investigaste y resolviste el problema correctamente.</p>
             <p><strong>Sin tickets = Sin prueba de que hiciste tu trabajo</strong></p>
             <h3>En un SOC específicamente</h3>
@@ -386,7 +420,7 @@
 
         <!-- ESTRUCTURA -->
         <div class="section">
-            <h2>Estructura de un Ticket</h2>
+            <h2 onclick="this.parentElement.classList.toggle('collapsed')">Estructura de un Ticket</h2>
             <p>Un ticket típicamente tiene estos campos:</p>
             <table>
                 <tbody><tr>
@@ -425,11 +459,22 @@
                     <td>juan.garcia@empresa.com</td>
                 </tr>
             </tbody></table>
+
+            <h3 style="margin-top: 30px; color: #00d4ff;">📋 Ejemplo: Ticket Completo (Caso Real)</h3>
+            <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #00d4ff; font-size: 0.95rem; margin-top: 15px;">
+                <p><strong>ID:</strong> TK-2026-0847 | <strong>Fecha:</strong> 2026-06-12 14:32 UTC | <strong>Reportado por:</strong> Wazuh SIEM</p>
+                <p style="margin-top: 10px;"><strong>Título:</strong> Alerta de Phishing - Múltiples empleados en dominio paypa1.com</p>
+                <p style="margin-top: 10px;"><strong>Descripción:</strong>
+ Se detectó phishing dirigido a 45 empleados. 12 hicieron clic en enlace
+ malicioso. Bloqueado inmediatamente. Requiere reseteo de credenciales.</p>
+                <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span style="background: rgba(255, 0, 0, 0.2); color: #ff6b6b; padding: 2px 8px; border-radius: 4px;">Crítica</span> | <strong>Categoría:</strong> Incident | <strong>Estado:</strong> <span style="background: rgba(255, 165, 0, 0.2); color: #ffa500; padding: 2px 8px; border-radius: 4px;">En Progreso</span></p>
+                <p style="margin-top: 10px;"><strong>Asignado a:</strong> carlos.rodriguez@empresa.com | <strong>Etiquetas:</strong> phishing, email, urgente</p>
+            </div>
         </div>
 
         <!-- CICLO DE VIDA -->
         <div class="section">
-            <h2>Ciclo de Vida de un Ticket</h2>
+            <h2 onclick="this.parentElement.classList.toggle('collapsed')">Ciclo de Vida de un Ticket</h2>
             <div class="example-box">
                 <strong>1. Abierto:</strong> Se acaba de crear, espera asignación
             </div>
@@ -447,29 +492,9 @@
             </div>
         </div>
 
-        <!-- BUENAS PRÁCTICAS -->
-        <div class="section">
-            <h2>Buenas Prácticas</h2>
-            <h3>✅ HACER:</h3>
-            <ul>
-                <li>Sé claro y específico en la descripción</li>
-                <li>Documenta cada acción que tomes</li>
-                <li>Adjunta evidencia (capturas, logs, archivos)</li>
-                <li>Actualiza el ticket regularmente</li>
-                <li>Usa comentarios para registrar el historial</li>
-            </ul>
-            <h3>❌ NO HACER:</h3>
-            <ul>
-                <li>No escribas descripciones vagas</li>
-                <li>No dejes tickets sin actualizar</li>
-                <li>No cierres sin resolver completamente</li>
-                <li>No olvides adjuntar evidencia</li>
-            </ul>
-        </div>
-
         <!-- GENERADOR DE TICKETS -->
         <div class="generator-section">
-            <h2>🎯 Generador de Tickets</h2>
+            <h2 onclick="this.parentElement.classList.toggle('collapsed')">🎯 Generador de Tickets</h2>
             <p style="margin-bottom: 20px;">Crea un ticket completamente funcional. Verás una vista previa en tiempo real:</p>
 
             <div class="form-grid">
@@ -506,6 +531,18 @@
                 </div>
 
                 <div class="form-group">
+                    <label>Estado *</label>
+                    <select id="estado" onchange="actualizarPreview()">
+                        <option value="" selected="selected">-- Selecciona --</option>
+                        <option value="Abierto">Abierto</option>
+                        <option value="En Progreso">En Progreso</option>
+                        <option value="En Espera">En Espera</option>
+                        <option value="Resuelto">Resuelto</option>
+                        <option value="Cerrado">Cerrado</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
                     <label>Asignado a</label>
                     <input type="email" id="asignado" placeholder="usuario@empresa.com" onkeyup="actualizarPreview()">
                 </div>
@@ -534,6 +571,59 @@
             </div>
         </div>
 
+        <div class="tips-section" style="margin-top: 40px;">
+            <h2 class="tips-title" onclick="this.parentElement.classList.toggle('collapsed')" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; color: #00d4ff; font-size: 1.8rem; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid rgba(0, 212, 255, 0.3);">💡 Tips Importantes y Buenas Prácticas <span style="font-size: 1rem;">▼</span></h2>
+            <div class="tips-content">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 0.95rem;">
+                    <div style="background: rgba(0, 212, 255, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #00d4ff;">
+                        <strong>✅ AL CREAR UN TICKET:</strong>
+                        <ul style="margin: 8px 0 0 20px; font-size: 0.9rem;">
+                            <li>Sé específico en el título (máx 100 caracteres)</li>
+                            <li>Describe qué, cuándo, dónde, quién está afectado</li>
+                            <li>Adjunta evidencia (logs, screenshots)</li>
+                            <li>Asigna prioridad correcta</li>
+                            <li>Selecciona categoría apropiada</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(123, 44, 191, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #7b2cbf;">
+                        <strong>🛡️ SEGURIDAD EN TICKETS:</strong>
+                        <ul style="margin: 8px 0 0 20px; font-size: 0.9rem;">
+                            <li>Nunca incluyas contraseñas en descripción</li>
+                            <li>Usa referencias a documentos internos</li>
+                            <li>Limita visibilidad a equipo autorizado</li>
+                            <li>Cuidado con datos personales (PII)</li>
+                            <li>Reporta en canal seguro</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(0, 255, 136, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #00ff88;">
+                        <strong>⚡ MANTENIMIENTO:</strong>
+                        <ul style="margin: 8px 0 0 20px; font-size: 0.9rem;">
+                            <li>Actualiza estado regularmente</li>
+                            <li>Comunica avances al reportante</li>
+                            <li>Cierra tickets con resumen final</li>
+                            <li>Mantén ticket abierto mientras investigas</li>
+                            <li>Documenta lecciones aprendidas</li>
+                        </ul>
+                    </div>
+                    <div style="background: rgba(255, 107, 107, 0.1); padding: 12px; border-radius: 8px; border-left: 3px solid #ff6b6b;">
+                        <strong>🚨 NO HACER:</strong>
+                        <ul style="margin: 8px 0 0 20px; font-size: 0.9rem;">
+                            <li>No dejes tickets abiertos sin acción</li>
+                            <li>No ignores críticos o de alta prioridad</li>
+                            <li>No copies ticket sin cambiar detalles</li>
+                            <li>No cierres sin verificar solución</li>
+                            <li>No pierdas evidencia de incidente</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <style>
+            .tips-section.collapsed .tips-content { display: none; }
+            .tips-section.collapsed h2::after { transform: rotate(-90deg); transition: 0.3s; }
+        </style>
+
         <footer>
             <p><strong>Guía de Tickets en SOC</strong> | Autor: Ezequiel Ayre</p>
             <p style="margin-top: 8px;">Guía completa para documentación de incidentes de seguridad | 2026</p>
@@ -548,6 +638,7 @@
             const descripcion = document.getElementById('descripcion').value;
             const prioridad = document.getElementById('prioridad').value;
             const categoria = document.getElementById('categoria').value;
+            const estado = document.getElementById('estado').value;
             const asignado = document.getElementById('asignado').value;
             const reportado = document.getElementById('reportado').value;
             const etiquetas = document.getElementById('etiquetas').value;
@@ -586,6 +677,14 @@
                     html += `<div class="preview-field">
                         <div class="preview-field-label">📂 Categoría</div>
                         <div class="preview-field-value">${categoria}</div>
+                    </div>`;
+                }
+
+                if (estado) {
+                    const estadoClass = estado === 'Resuelto' || estado === 'Cerrado' ? 'badge-success' : estado === 'En Progreso' ? 'badge-medium' : 'badge-info';
+                    html += `<div class="preview-field">
+                        <div class="preview-field-label">⏱️ Estado</div>
+                        <div class="preview-field-value"><span class="badge ${estadoClass}">${estado}</span></div>
                     </div>`;
                 }
 
