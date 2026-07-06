@@ -412,6 +412,98 @@
         </div>
 
         <div class="section collapsible" onclick="toggleSection(this)">
+            <h2>🤝 Modelo de Responsabilidad Compartida</h2>
+            <p style="margin-bottom: 15px; color: #a1a1aa;">En cloud, la seguridad es responsabilidad compartida entre el proveedor (AWS/Azure) y tú. El proveedor se encarga de la seguridad <strong>DEL</strong> cloud, tú de la seguridad <strong>EN</strong> el cloud.</p>
+            
+            <p style="margin-bottom: 15px;"><strong>¿Qué significa esto?</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 20px; line-height: 1.8;">
+                <li><strong>Proveedor (AWS/Azure):</strong> Seguridad de los datacenters, hardware, red física, encriptación de datos en reposo por defecto</li>
+                <li><strong>Tú:</strong> Seguridad de tus datos, configuración de firewalls, gestión de usuarios, parcheo de sistemas, encriptación de datos sensibles</li>
+            </ul>
+
+            <h3 style="margin-top: 20px; margin-bottom: 15px; color: #7b2cbf;">📊 Responsabilidades por Modelo de Servicio</h3>
+            <table>
+                <tr>
+                    <th>Responsabilidad</th>
+                    <th>IaaS (EC2, VMs)</th>
+                    <th>PaaS (Lambda, Functions, RDS)</th>
+                    <th>SaaS (Office 365, Gmail)</th>
+                </tr>
+                <tr>
+                    <td><strong>Hardware / Datacenter</strong></td>
+                    <td>✅ Proveedor</td>
+                    <td>✅ Proveedor</td>
+                    <td>✅ Proveedor</td>
+                </tr>
+                <tr>
+                    <td><strong>Sistema Operativo</strong></td>
+                    <td>👤 Tú</td>
+                    <td>✅ Proveedor</td>
+                    <td>✅ Proveedor</td>
+                </tr>
+                <tr>
+                    <td><strong>Runtime / Framework</strong></td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                    <td>✅ Proveedor</td>
+                </tr>
+                <tr>
+                    <td><strong>Aplicación / Código</strong></td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                </tr>
+                <tr>
+                    <td><strong>Datos</strong></td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                </tr>
+                <tr>
+                    <td><strong>Configuración de Red</strong></td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                    <td>✅ Proveedor</td>
+                </tr>
+                <tr>
+                    <td><strong>Identity / Access</strong></td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                    <td>👤 Tú</td>
+                </tr>
+            </table>
+
+            <h3 style="margin-top: 20px; margin-bottom: 15px; color: #7b2cbf;">💡 Ejemplos del Día a Día</h3>
+            
+            <div style="background: rgba(0, 212, 255, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #00d4ff;">
+                <strong style="color: #00d4ff;">IaaS - Como alquilar una computadora vacía:</strong>
+                <p style="margin-top: 8px; font-size: 0.9rem; color: #a1a1aa;">Es como si alquilas una PC pero viene sin Windows ni programas. Tú instalas el sistema operativo, los programas, configurás todo. El proveedor solo te da el hardware. <em>Ejemplo técnico: EC2, Azure VMs</em></p>
+            </div>
+
+            <div style="background: rgba(123, 44, 191, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #7b2cbf;">
+                <strong style="color: #7b2cbf;">PaaS - Como Netflix o Spotify:</strong>
+                <p style="margin-top: 8px; font-size: 0.9rem; color: #a1a1aa;">Netflix maneja toda la infraestructura (servidores, bases de datos, streaming). Tú solo subes tu película y configuras quién puede verla. No te preocupás por servidores ni parches. <em>Ejemplo técnico: Lambda, Azure Functions, RDS</em></p>
+            </div>
+
+            <div style="background: rgba(255, 107, 107, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #ff6b6b;">
+                <strong style="color: #ff6b6b;">SaaS - Como Gmail, Google Docs, Office 365:</strong>
+                <p style="margin-top: 8px; font-size: 0.9rem; color: #a1a1aa;">Google maneja TODO: servidores, seguridad, actualizaciones, backups. Tú solo creás tu cuenta, escribís emails y gestionás quién tiene acceso. Pero aún sos responsable de no compartir tu contraseña ni subir datos confidenciales.</p>
+            </div>
+
+            <div style="background: rgba(0, 255, 136, 0.1); padding: 12px; border-radius: 8px; margin-bottom: 10px; border-left: 3px solid #00ff88;">
+                <strong style="color: #00ff88;">🎮 Otros ejemplos que usás todos los días:</strong>
+                <ul style="margin-top: 8px; margin-left: 20px; font-size: 0.9rem; color: #a1a1aa;">
+                    <li><strong>Instagram:</strong> SaaS - Ellos manejan todo, vos solo subís fotos y gestionás tu cuenta</li>
+                    <li><strong>WhatsApp Web:</strong> SaaS - Meta maneja servidores y seguridad, vos solo chateás</li>
+                    <li><strong>Dropbox / Google Drive:</strong> SaaS - Ellos guardan tus archivos, vos los subís y compartís</li>
+                    <li><strong>Spotify:</strong> PaaS/SaaS - Ellos manejan streaming, vos solo escuchás y creás playlists</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 15px; color: #00d4ff; font-weight: 600;">⚠️ Regla de oro: Nunca asumas que el proveedor hace todo. Siempre verifica qué es tu responsabilidad.</p>
+        </div>
+
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>📊 AWS vs Azure - Comparación Directa</h2>
             <table>
                 <tr>
