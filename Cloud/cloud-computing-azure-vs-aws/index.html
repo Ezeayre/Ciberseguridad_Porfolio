@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="es"><head>
-<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<html lang="es">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cloud Computing - Azure vs AWS</title>
@@ -354,12 +354,20 @@
         .section.collapsible.collapsed > *:not(h2) {
             display: none;
         }
+
+        .section.collapsible h2 {
+            cursor: pointer;
+        }
+
+        .section.collapsible > *:not(h2) {
+            pointer-events: auto;
+        }
 </style>
 </head>
 <body>
     <div class="container">
         <header>
-            <a href="http://192.168.172.1:8100/index.html">← Volver al Portafolio</a>
+            <a href="../../index.html">← Volver al Portafolio</a>
             <h1>☁️ Cloud Computing</h1>
             <p>Guía interactiva: AWS vs Azure - Servicios, Seguridad y Buenas Prácticas</p>
         </header>
@@ -376,478 +384,37 @@
             <button class="filter-btn" onclick="filterByCategory('seguridad')">🛡️ Seguridad</button>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>📚 Introducción</h2>
-            <p>Cloud Computing ha revolucionado la forma en que las 
-empresas y desarrolladores gestionan sus infraestructuras. En lugar de 
-comprar y mantener servidores físicos, ahora puedes alquilar recursos 
-computacionales bajo demanda, pagando solo por lo que usas.</p>
+            <p>Cloud Computing ha revolucionado la forma en que las empresas y desarrolladores gestionan sus infraestructuras. En lugar de comprar y mantener servidores físicos, ahora puedes alquilar recursos computacionales bajo demanda, pagando solo por lo que usas.</p>
             <p>Los dos líderes del mercado son <strong>AWS (Amazon Web Services)</strong> y <strong>Azure (Microsoft)</strong>. Ambos ofrecen cientos de servicios, pero tienen diferencias importantes en enfoque, ecosistema y curva de aprendizaje.</p>
-            <p>Esta guía te ayudará a entender los conceptos 
-fundamentales, los servicios principales de cada plataforma, y las 
-mejores prácticas de seguridad para implementar en la nube.</p>
+            <p>Esta guía te ayudará a entender los conceptos fundamentales, los servicios principales de cada plataforma, y las mejores prácticas de seguridad para implementar en la nube.</p>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>📚 Conceptos Fundamentales</h2>
-            <div id="topicsContainer" class="topics-grid">
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">¿Qué es Cloud Computing?</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Fundamentos de computación en la nube</p>
-                        <div class="topic-details"><strong>Cloud Computing</strong> es alquilar computadoras/servidores en internet en lugar de comprar los propios.
-                <br><br><strong>Ejemplo:</strong> En lugar de tener un 
-servidor físico en tu oficina, usas servidores de AWS o Azure que están 
-en data centers alrededor del mundo.
-                <br><br><strong>Ventajas:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>No necesitas mantener hardware físico</li>
-                    <li>Pagas solo lo que usas</li>
-                    <li>Escalas fácilmente (más o menos recursos)</li>
-                    <li>Disponible desde cualquier lugar</li>
-                </ul></div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">IaaS - Infraestructura</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Alquilas computadoras virtuales</p>
-                        <div class="topic-details"><strong>IaaS = Infrastructure as a Service</strong>
-                <br><br>Alquilas servidores virtuales y redes. Tú gestiones el sistema operativo y todo lo que va encima.
-                <br><br><strong>Ejemplos:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>AWS EC2 - Servidores virtuales Linux/Windows</li>
-                    <li>Azure VMs - Máquinas virtuales en Azure</li>
-                    <li>Google Compute Engine</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Necesitas un servidor para correr tu aplicación web personalizada.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">PaaS - Plataforma</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Plataforma lista para subir aplicaciones</p>
-                        <div class="topic-details"><strong>PaaS = Platform as a Service</strong>
-                <br><br>El proveedor gestiona la infraestructura. Tú solo subes tu código y listo.
-                <br><br><strong>Ejemplos:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>AWS Lambda - Código sin servidor</li>
-                    <li>Azure App Service - Aplicaciones web</li>
-                    <li>Heroku</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Tienes un script Python y quieres que se ejecute cada hora sin gestionar servidor.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">SaaS - Software</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Software listo para usar en navegador</p>
-                        <div class="topic-details"><strong>SaaS = Software as a Service</strong>
-                <br><br>Es el software que usas en el navegador. No instalas nada.
-                <br><br><strong>Ejemplos:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Gmail</li>
-                    <li>Microsoft Office 365</li>
-                    <li>Slack</li>
-                    <li>Jira</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Necesitas colaborar con tu equipo en documentos.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Regiones y Availability Zones</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Dónde están los servidores</p>
-                        <div class="topic-details"><strong>¿Por qué importa?</strong> Afecta latencia, cumplimiento legal y disponibilidad.
-                <br><br><strong>Región:</strong> Área geográfica (ej: us-east-1, eu-west-1)
-                <br><br><strong>Availability Zone (AZ):</strong> Data center dentro de una región
-                <br><br><strong>Ejemplo AWS:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Región us-east-1 tiene 3 AZs (us-east-1a, 1b, 1c)</li>
-                    <li>Si un AZ cae, tus datos siguen disponibles en otros AZs</li>
-                </ul>
-                <br><strong>Best Practice:</strong> Distribuye tus recursos en múltiples AZs para alta disponibilidad.</div>
-                    </div>
-                </div>
+            <div id="topicsContainer" class="topics-grid"></div>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>🔶 Servicios de AWS</h2>
-            <div id="awsContainer" class="topics-grid">
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">EC2 - El servicio estrella de AWS</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Máquinas virtuales escalables</p>
-                        <div class="topic-details"><strong>EC2 = Elastic Compute Cloud</strong>
-                <br><br>Son servidores virtuales que puedes crear/destruir en minutos.
-                <br><br><strong>Tipos de instancias:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>t2.micro:</strong> Gratis 12 meses - Para aprender</li>
-                    <li><strong>t2.small:</strong> Pequeña aplicación web</li>
-                    <li><strong>m5.large:</strong> Aplicación mediana</li>
-                    <li><strong>c5.xlarge:</strong> Alto rendimiento (CPU intensivo)</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Levantas un servidor Linux, instalas Apache, subes tu web.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">S3 - Almacenamiento en AWS</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Guardar archivos/datos</p>
-                        <div class="topic-details"><strong>S3 = Simple Storage Service</strong>
-                <br><br>Es como Google Drive pero para aplicaciones. Guardas cualquier archivo: fotos, videos, backups, logs.
-                <br><br><strong>Características:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Almacenamiento ilimitado</li>
-                    <li>Acceso desde cualquier lugar</li>
-                    <li>Muy barato ($0.023 por GB/mes)</li>
-                    <li>Durabilidad 99.999999999% (11 nueves)</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Guardar backups diarios de tu base de datos.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">RDS - Base de datos en AWS</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Bases de datos gestionadas</p>
-                        <div class="topic-details"><strong>RDS = Relational Database Service</strong>
-                <br><br>AWS gestiona la base de datos por ti. No necesitas mantener servidores.
-                <br><br><strong>Motores soportados:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>MySQL</li>
-                    <li>PostgreSQL</li>
-                    <li>MariaDB</li>
-                    <li>Oracle</li>
-                    <li>SQL Server</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Tu aplicación web necesita una BD. RDS la maneja, backups automáticos, actualizaciones.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Auto Scaling - Crecer automáticamente</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Más recursos cuando más los necesitas</p>
-                        <div class="topic-details"><strong>Auto Scaling Group (ASG)</strong>
-                <br><br>Aumenta/disminuye instancias EC2 automáticamente según la carga.
-                <br><br><strong>Ejemplo:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>10 AM: Poco tráfico → 2 instancias EC2</li>
-                    <li>2 PM: Alto tráfico → 10 instancias EC2</li>
-                    <li>6 PM: Bajo tráfico → 2 instancias EC2</li>
-                </ul>
-                <br><strong>Beneficio:</strong> Pagas solo por lo que usas.
-                <br><strong>Caso de uso:</strong> Tu web recibe 1000 usuarios a las 9 AM. Auto Scaling agrega servidores automáticamente.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Load Balancing - Distribuir carga</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Repartir tráfico entre servidores</p>
-                        <div class="topic-details"><strong>Load Balancer (ELB)</strong>
-                <br><br>Distribuye el tráfico entre múltiples servidores para que ninguno se sobrecargue.
-                <br><br><strong>Tipos:**
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>Application Load Balancer:</strong> Para aplicaciones web (HTTP/HTTPS)</li>
-                    <li><strong>Network Load Balancer:</strong> Ultra alto rendimiento</li>
-                    <li><strong>Classic Load Balancer:</strong> Antiguo, se está deprecando</li>
-                </ul>
-                <br><strong>Ejemplo:</strong> 1000 usuarios llegan. ELB reparte: 250 en cada uno de 4 servidores.
-                <br><strong>Caso de uso:** Tu e-commerce en Black Friday recibe 100k usuarios simultáneamente.</strong></strong></div><strong><strong>
-                    </strong></strong></div><strong><strong>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">VPC - Red privada en Cloud</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Tu red privada en AWS</p>
-                        <div class="topic-details"><strong>VPC = Virtual Private Cloud</strong>
-                <br><br>Es tu red privada en AWS. Define subredes, routers, security groups.
-                <br><br><strong>Conceptos:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>CIDR Block:</strong> Rango de IPs (ej: 10.0.0.0/16)</li>
-                    <li><strong>Subnet:</strong> Subdivide el rango en redes más pequeñas</li>
-                    <li><strong>Internet Gateway:</strong> Permite conectar a internet</li>
-                    <li><strong>NAT Gateway:</strong> Permite salir a internet pero no entrar</li>
-                </ul>
-                <br><strong>Best Practice:</strong> Divide en subredes públicas (web) y privadas (BD).</div>
-                    </div>
-                </strong></strong></div>
+            <div id="awsContainer" class="topics-grid"></div>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>🔵 Servicios de Azure</h2>
-            <div id="azureContainer" class="topics-grid">
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Azure VMs - Máquinas en Azure</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Servidores virtuales como en AWS</p>
-                        <div class="topic-details"><strong>Azure Virtual Machines</strong>
-                <br><br>Lo equivalente a EC2 en AWS. Servidores virtuales Windows/Linux escalables.
-                <br><br><strong>Tipos:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>B1S:</strong> Gratis 12 meses - Para aprender</li>
-                    <li><strong>B2s:</strong> Aplicación web pequeña</li>
-                    <li><strong>D2s_v3:</strong> Alto rendimiento</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Igual que EC2 en AWS, pero con integración Microsoft.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Azure Storage - Almacenamiento</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Guardar datos como en S3</p>
-                        <div class="topic-details"><strong>Azure Storage</strong>
-                <br><br>Lo equivalente a S3 en AWS. Almacenamiento masivo y barato.
-                <br><br><strong>Tipos de almacenamiento:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>Blob Storage:</strong> Archivos grandes (videos, fotos)</li>
-                    <li><strong>File Shares:</strong> Carpetas compartidas (como Dropbox)</li>
-                    <li><strong>Queue Storage:</strong> Colas de mensajes</li>
-                    <li><strong>Table Storage:</strong> Base de datos NoSQL</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Guardar logs de tu aplicación.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Azure SQL Database</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Base de datos SQL gestionada</p>
-                        <div class="topic-details"><strong>Azure SQL Database</strong>
-                <br><br>Lo equivalente a RDS en AWS. Base de datos SQL Server gestionada.
-                <br><br><strong>Características:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>SQL Server completamente gestionado</li>
-                    <li>Backups automáticos</li>
-                    <li>Escalado automático</li>
-                    <li>Seguridad integrada (encriptación)</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Aplicación .NET necesita base de datos SQL Server.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Azure Functions - Serverless</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Código sin servidor en Azure</p>
-                        <div class="topic-details"><strong>Azure Functions</strong>
-                <br><br>Lo equivalente a Lambda en AWS. Ejecuta código sin gestionar servidores.
-                <br><br><strong>Características:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Pay-per-use: Pagas solo cuando el código se ejecuta</li>
-                    <li>Soporta múltiples lenguajes (C#, Python, JavaScript, Java)</li>
-                    <li>Triggers: HTTP, Timer, Blob, Queue, etc</li>
-                    <li>Escalado automático</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Script que se ejecuta cada hora para procesar datos.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Azure Load Balancer</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Distribuir tráfico en Azure</p>
-                        <div class="topic-details"><strong>Azure Load Balancer</strong>
-                <br><br>Lo equivalente a ELB en AWS. Distribuye tráfico entre VMs.
-                <br><br><strong>Tipos:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>Public Load Balancer:</strong> Para tráfico desde internet</li>
-                    <li><strong>Internal Load Balancer:</strong> Para tráfico dentro de la red virtual</li>
-                    <li><strong>Application Gateway:</strong> Balanceo de carga capa 7 (HTTP/HTTPS)</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Tu web recibe mucho tráfico. Load Balancer reparte entre varias VMs.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Azure VNet - Red Virtual</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Tu red privada en Azure</p>
-                        <div class="topic-details"><strong>VNet = Virtual Network</strong>
-                <br><br>Lo equivalente a VPC en AWS. Tu red privada en Azure.
-                <br><br><strong>Conceptos:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>Address Space:</strong> Rango de IPs (ej: 10.0.0.0/16)</li>
-                    <li><strong>Subnet:</strong> Subdivide el rango en redes más pequeñas</li>
-                    <li><strong>NSG:</strong> Network Security Groups (firewall)</li>
-                    <li><strong>VPN Gateway:</strong> Conecta con tu red on-premise</li>
-                </ul>
-                <br><strong>Best Practice:</strong> Divide en subredes públicas (web) y privadas (BD).</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Azure Backup - Copias de seguridad</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Backup y Disaster Recovery</p>
-                        <div class="topic-details"><strong>Azure Backup</strong>
-                <br><br>Servicio de backup para datos y VMs en Azure.
-                <br><br><strong>Características:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Backups automáticos programados</li>
-                    <li>Retención configurable (días, semanas, meses, años)</li>
-                    <li>Restore instantáneo de VMs</li>
-                    <li>Backup entre regiones (Geo-redundant)</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Tu VM tiene datos críticos. Azure Backup hace backups automáticos cada noche.</div>
-                    </div>
-                </div>
+            <div id="azureContainer" class="topics-grid"></div>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>🛡️ Seguridad en Cloud</h2>
-            <div id="securityContainer" class="topics-grid">
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">IAM - Control de acceso en AWS</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Quién puede hacer qué</p>
-                        <div class="topic-details"><strong>IAM = Identity and Access Management</strong>
-                <br><br>Controla quién accede a qué recursos en AWS. Lo más importante en seguridad.
-                <br><br><strong>Conceptos clave:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>Usuarios:</strong> Personas o aplicaciones</li>
-                    <li><strong>Roles:</strong> Conjunto de permisos (ej: Admin, ReadOnly)</li>
-                    <li><strong>Políticas:</strong> Reglas detalladas (ej: "puede leer S3 pero no escribir")</li>
-                    <li><strong>MFA:</strong> Autenticación de dos factores</li>
-                </ul>
-                <br><strong>Best Practice:</strong> Nunca uses credenciales root. Crea usuarios IAM con permisos mínimos.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Security Groups - Firewall en AWS</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Controlar tráfico de red</p>
-                        <div class="topic-details"><strong>Security Groups</strong>
-                <br><br>Es un firewall virtual. Define qué puertos/IPs pueden acceder a tu EC2.
-                <br><br><strong>Ejemplo de regla:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Puerto 22 (SSH): Abierto SOLO desde 192.168.1.100 (tu IP)</li>
-                    <li>Puerto 80 (HTTP): Abierto desde cualquier lugar</li>
-                    <li>Puerto 443 (HTTPS): Abierto desde cualquier lugar</li>
-                    <li>Todos los puertos: CERRADOS (por defecto)</li>
-                </ul>
-                <br><strong>Best Practice:</strong> Cierra todo. Abre solo lo que necesites desde IPs específicas.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Network Security Groups - NSG en Azure</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Firewall en Azure</p>
-                        <div class="topic-details"><strong>NSG = Network Security Groups</strong>
-                <br><br>Lo equivalente a Security Groups en AWS. Firewall virtual en Azure.
-                <br><br><strong>Funciona igual que AWS:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Define reglas de entrada (inbound)</li>
-                    <li>Define reglas de salida (outbound)</li>
-                    <li>Asocia a VMs o subredes</li>
-                </ul>
-                <br><strong>Diferencia con AWS:</strong> Azure permite más granularidad en reglas de salida.</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Entra ID - Control de acceso Azure</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">IAM de Azure</p>
-                        <div class="topic-details"><strong>Entra ID (antes Azure AD)</strong>
-                <br><br>Es el IAM de Azure. Controla quién accede a recursos Azure.
-                <br><br><strong>Características:</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>Gestión centralizada de usuarios</li>
-                    <li>Single Sign-On (SSO)</li>
-                    <li>Integración con Microsoft Office 365</li>
-                    <li>Autenticación multifactor (MFA)</li>
-                    <li>Gestión de permisos granulares</li>
-                </ul>
-                <br><strong>Best Practice:</strong> Usar roles RBAC (Role-Based Access Control).</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Encriptación en Cloud</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">Datos seguros</p>
-                        <div class="topic-details"><strong>Encriptación en tránsito y en reposo</strong>
-                <br><br><strong>En tránsito (mientras se envía):</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>HTTPS/TLS - Encripta datos en internet</li>
-                    <li>VPN - Red privada virtual</li>
-                </ul>
-                <br><strong>En reposo (guardado):</strong>
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>AWS KMS - Key Management Service (AWS)</li>
-                    <li>Azure Key Vault (Azure)</li>
-                    <li>Encriptación de base de datos</li>
-                </ul>
-                <br><strong>Best Practice:</strong> SIEMPRE encripta datos sensibles (PII, tarjetas, etc).</div>
-                    </div>
-                
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
-                        <div class="topic-header">
-                            <div class="topic-name">Backup y Disaster Recovery</div>
-                            <span class="expand-icon">▼</span>
-                        </div>
-                        <p class="topic-description">No perder datos</p>
-                        <div class="topic-details"><strong>¿Qué pasa si tu servidor explota?</strong>
-                <br><br><strong>Estrategia 3-2-1:**
-                <ul style="margin: 10px 0 0 20px;">
-                    <li><strong>3</strong> copias de tus datos</li>
-                    <li><strong>2</strong> en medios diferentes (ej: EBS + S3)</li>
-                    <li><strong>1</strong> copia offsite (en otra región)</li>
-                </ul>
-                <br><strong>En AWS:**
-                <ul style="margin: 10px 0 0 20px;">
-                    <li>AWS Backup - Backups automatizados</li>
-                    <li>RDS Multi-AZ - BD replicada automáticamente</li>
-                    <li>S3 Cross-Region Replication - Copiar a otra región</li>
-                </ul>
-                <br><strong>Caso de uso:</strong> Tu aplicación crítica necesita 99.99% uptime (máximo 50 minutos downtime/año).</strong></strong></div><strong><strong>
-                    </strong></strong></div><strong><strong>
-                </strong></strong></div>
+            <div id="securityContainer" class="topics-grid"></div>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>📊 AWS vs Azure - Comparación Directa</h2>
             <table>
-                <tbody><tr>
+                <tr>
                     <th>Aspecto</th>
                     <th>AWS</th>
                     <th>Azure</th>
@@ -882,11 +449,11 @@ en data centers alrededor del mundo.
                     <td>Más pronunciada</td>
                     <td>Más suave si conoces Microsoft</td>
                 </tr>
-            </tbody></table>
+            </table>
 
             <h3 style="margin-top: 30px; margin-bottom: 15px; color: #00d4ff;">🔄 Equivalencias de Servicios</h3>
             <table>
-                <tbody><tr>
+                <tr>
                     <th>Servicio</th>
                     <th>AWS</th>
                     <th>Azure</th>
@@ -964,10 +531,10 @@ en data centers alrededor del mundo.
                     <td>Azure CDN</td>
                     <td>Entrega de contenido global</td>
                 </tr>
-            </tbody></table>
+            </table>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>💻 Comandos CLI Básicos - AWS</h2>
             <p style="margin-bottom: 20px; color: #a1a1aa;">Comandos esenciales de AWS CLI para tareas diarias. Requiere <code>aws configure</code> previo con tus credenciales.</p>
             
@@ -1072,7 +639,7 @@ en data centers alrededor del mundo.
             </div>
         </div>
 
-        <div class="section collapsible" onclick="this.classList.toggle('collapsed')">
+        <div class="section collapsible" onclick="toggleSection(this)">
             <h2>💻 Comandos CLI Básicos - Azure</h2>
             <p style="margin-bottom: 20px; color: #a1a1aa;">Comandos esenciales de Azure CLI para tareas diarias. Requiere <code>az login</code> previo.</p>
             
@@ -1603,7 +1170,7 @@ en data centers alrededor del mundo.
 
             topics.filter(topic => topic.category === category).forEach(topic => {
                 html += `
-                    <div class="topic-card" onclick="this.classList.toggle('expanded')">
+                    <div class="topic-card" onclick="toggleTopicCard(this)">
                         <div class="topic-header">
                             <div class="topic-name">${topic.title}</div>
                             <span class="expand-icon">▼</span>
@@ -1680,6 +1247,7 @@ en data centers alrededor del mundo.
         }
 
         function copyCommand(button) {
+            event.stopPropagation();
             const command = button.parentElement.querySelector('code').textContent;
             navigator.clipboard.writeText(command).then(() => {
                 button.textContent = 'Copied!';
@@ -1691,7 +1259,16 @@ en data centers alrededor del mundo.
             });
         }
 
+        function toggleTopicCard(card) {
+            event.stopPropagation();
+            card.classList.toggle('expanded');
+        }
+
+        function toggleSection(section) {
+            section.classList.toggle('collapsed');
+        }
+
         renderAllTopics();
     </script>
-
-</body></html>
+</body>
+</html>
