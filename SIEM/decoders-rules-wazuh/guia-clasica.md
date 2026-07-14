@@ -2,7 +2,7 @@
 
 Proyecto de ciberseguridad que documenta qué son los decoders y las rules en Wazuh (SIEM), cómo se relacionan con los logs, y cómo se usan para enseñarle a Wazuh a reconocer y alertar sobre un evento que no detecta de forma nativa. Como ejemplo práctico, se muestra el caso de un escaneo de puertos con Nmap.
 
-Este proyecto se conecta con el proyecto [Red Team vs Blue Team](../../RedTeam-vs-BlueTeam/index.html), donde se simuló ese ataque, y explica en detalle la configuración que hizo posible detectarlo.
+Este proyecto se conecta con el proyecto [Red Team vs Blue Team](https://ezeayre.github.io/Ciberseguridad_Porfolio/RedTeam-vs-BlueTeam/index.html), donde se simuló ese ataque, y explica en detalle la configuración que hizo posible detectarlo.
 
 ---
 
@@ -149,8 +149,8 @@ Al hacer click en la alerta, se ve el detalle completo:
 
 ## 🔗 Proyectos relacionados
 
-- [Red Team vs Blue Team](../../RedTeam-vs-BlueTeam/index.html) - El ataque original que motivó esta configuración
-- [Wazuh Setup](../wazuh-setup/index.html) - Instalación inicial de Wazuh
+- [Red Team vs Blue Team](https://ezeayre.github.io/Ciberseguridad_Porfolio/RedTeam-vs-BlueTeam/index.html) - El ataque original que motivó esta configuración
+- [Wazuh Setup](https://github.com/Ezeayre/Ciberseguridad_Porfolio/tree/main/SIEM/wazuh-setup) - Instalación inicial de Wazuh
 
 ---
 
