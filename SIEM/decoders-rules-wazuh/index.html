@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decoders y Rules en Wazuh</title>
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: #e4e4e7;
+        padding: 20px;
+        min-height: 100vh;
+    }
+
+    .container { max-width: 1200px; margin: 0 auto; }
+
+    header {
+        text-align: center;
+        padding: 40px 20px;
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        margin-bottom: 30px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+    }
+
+    header a {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        color: #00d4ff;
+        text-decoration: none;
+        padding: 8px 12px;
+        border: 1px solid rgba(0, 212, 255, 0.3);
+        border-radius: 6px;
+        transition: 0.3s;
+        font-size: 0.9rem;
+    }
+
+    header a:hover { background: rgba(0, 212, 255, 0.1); }
+
+    header h1 {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+        background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    header p { color: #a1a1aa; font-size: 1.05rem; }
+
+    /* Diagrama de flujo fijo */
+    .flow-section {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+        text-align: center;
+    }
+
+    .flow-section h2 {
+        color: #00d4ff;
+        margin-bottom: 20px;
+        font-size: 1.4rem;
+    }
+
+    .flow-diagram {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .flow-box {
+        padding: 14px 18px;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        min-width: 100px;
+    }
+
+    .flow-box.log { background: rgba(161, 161, 170, 0.2); border: 1px solid #a1a1aa; color: #d4d4d8; }
+    .flow-box.decoder { background: rgba(0, 212, 255, 0.15); border: 1px solid #00d4ff; color: #00d4ff; }
+    .flow-box.rule { background: rgba(123, 44, 191, 0.15); border: 1px solid #7b2cbf; color: #c084fc; }
+    .flow-box.alert { background: rgba(255, 107, 107, 0.15); border: 1px solid #ff6b6b; color: #ff6b6b; }
+
+    .flow-arrow { font-size: 1.3rem; color: #a1a1aa; }
+
+    /* Secciones acordeón */
+    .section {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        margin-bottom: 20px;
+        overflow: hidden;
+    }
+
+    .section h2 {
+        color: #00d4ff;
+        font-size: 1.3rem;
+        padding: 20px 25px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .section h2::after {
+        content: "▼";
+        font-size: 0.85rem;
+        margin-left: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .section.collapsed h2::after { transform: rotate(-90deg); }
+    .section.collapsed .section-body { display: none; }
+
+    .section-body { padding: 0 25px 25px 25px; line-height: 1.8; }
+
+    .section-body p { margin-bottom: 12px; }
+
+    .section-body code {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #00ff9d;
+        font-size: 0.9rem;
+    }
+
+    .highlight-box {
+        background: rgba(0, 212, 255, 0.08);
+        border-left: 3px solid #00d4ff;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 12px;
+        font-size: 0.95rem;
+    }
+
+    /* Stepper del ejemplo práctico */
+    .example-section {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .example-section > h2 {
+        color: #00d4ff;
+        font-size: 1.5rem;
+        margin-bottom: 8px;
+    }
+
+    .example-section > p.subtitle {
+        color: #a1a1aa;
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+    }
+
+    .stepper { display: flex; flex-direction: column; gap: 12px; }
+
+    .step {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .step-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px 20px;
+        cursor: pointer;
+        background: rgba(255, 255, 255, 0.03);
+        transition: 0.3s;
+    }
+
+    .step-header:hover { background: rgba(0, 212, 255, 0.05); }
+
+    .step-number {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: linear-gradient(90deg, #00d4ff, #7b2cbf);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        color: #0f0f1e;
+        flex-shrink: 0;
+    }
+
+    .step-title { font-weight: 600; color: #e4e4e7; flex: 1; }
+
+    .step-toggle { color: #a1a1aa; transition: transform 0.3s ease; }
+    .step.collapsed .step-toggle { transform: rotate(-90deg); }
+    .step.collapsed .step-body { display: none; }
+
+    .step-body { padding: 20px; line-height: 1.8; }
+
+    .step-body p { margin-bottom: 12px; }
+
+    .step-body pre {
+        background: #0f0f1e;
+        border: 1px solid rgba(0, 212, 255, 0.2);
+        border-radius: 8px;
+        padding: 14px;
+        overflow-x: auto;
+        margin: 12px 0;
+        font-size: 0.85rem;
+        color: #00ff9d;
+    }
+
+    .step-body code {
+        background: rgba(0, 0, 0, 0.3);
+        padding: 2px 8px;
+        border-radius: 4px;
+        color: #00ff9d;
+        font-size: 0.9rem;
+    }
+
+    /* Placeholder de captura */
+    .screenshot-placeholder {
+        border: 2px dashed rgba(0, 212, 255, 0.3);
+        border-radius: 10px;
+        padding: 40px 20px;
+        text-align: center;
+        color: #7b8794;
+        background: rgba(0, 0, 0, 0.15);
+        margin-top: 15px;
+        font-size: 0.9rem;
+    }
+
+    .screenshot-placeholder .icon { font-size: 1.8rem; display: block; margin-bottom: 8px; }
+
+    .note-box {
+        background: rgba(255, 165, 2, 0.08);
+        border-left: 3px solid #f5a623;
+        padding: 12px 16px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 0.9rem;
+    }
+
+    /* Tips */
+    .tips-container {
+        background: rgba(0, 212, 255, 0.1);
+        border-left: 4px solid #7b2cbf;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .tips-container h2 {
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #7b2cbf;
+    }
+
+    .tips-container h2::after {
+        content: "▼";
+        font-size: 0.85rem;
+        margin-left: auto;
+        transition: transform 0.3s ease;
+    }
+
+    .tips-container.collapsed h2::after { transform: rotate(-90deg); }
+    .tips-container.collapsed .tips-body { display: none; }
+
+    .tips-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .tips-box {
+        background: rgba(0, 0, 0, 0.2);
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 3px solid;
+    }
+
+    .tips-box.do { border-left-color: #00d4ff; }
+    .tips-box.dont { border-left-color: #ff6b6b; }
+    .tips-box ul { margin: 10px 0 0 20px; }
+    .tips-box li { margin-bottom: 8px; font-size: 0.9rem; }
+
+    /* Proyectos relacionados */
+    .related-section h2 {
+        color: #00d4ff;
+        font-size: 1.4rem;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    .related-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .related-card {
+        display: block;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 20px;
+        text-decoration: none;
+        color: #e4e4e7;
+        transition: 0.3s;
+    }
+
+    .related-card:hover {
+        transform: translateY(-3px);
+        border-color: rgba(0, 212, 255, 0.4);
+        box-shadow: 0 10px 25px rgba(0, 212, 255, 0.15);
+    }
+
+    .related-card .related-title { color: #00d4ff; font-weight: 600; margin-bottom: 6px; font-size: 1.05rem; }
+    .related-card .related-desc { color: #a1a1aa; font-size: 0.85rem; }
+
+    footer {
+        text-align: center;
+        padding: 20px;
+        color: #a1a1aa;
+        margin-top: 20px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        font-size: 0.9rem;
+    }
+
+    @media (max-width: 700px) {
+        .tips-grid, .related-grid { grid-template-columns: 1fr; }
+    }
+</style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <a href="http://192.168.172.1:8400/index.html">← Volver al Portafolio</a>
+        <h1>🧩 Decoders y Rules en Wazuh</h1>
+        <p>Qué son, cómo se relacionan con los logs, y cómo se usan para detectar lo que Wazuh no reconoce de forma nativa</p>
+    </header>
+
+    <div class="flow-section">
+        <h2>🔗 El flujo completo</h2>
+        <div class="flow-diagram">
+            <div class="flow-box log">📄 Log</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box decoder">🔍 Decoder</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box rule">⚖️ Rule</div>
+            <span class="flow-arrow">→</span>
+            <div class="flow-box alert">🚨 Alerta</div>
+        </div>
+    </div>
+
+    <div class="section" onclick="this.classList.toggle('collapsed')">
+        <h2>📋 ¿De qué trata esta guía?</h2>
+        <div class="section-body">
+            <p>Esta guía explica qué son los decoders y las rules en 
+Wazuh (SIEM), y cómo se relacionan entre sí y con los logs para generar 
+una alerta. Son dos piezas de configuración fundamentales: sin ellas, 
+Wazuh no puede reconocer ni reaccionar ante un evento que no conoce de 
+antemano.</p>
+            <p>Como ejemplo práctico, se documenta el caso real usado en el proyecto <a href="https://ezeayre.github.io/Ciberseguridad_Porfolio/RedTeam-vs-BlueTeam/index.html" style="color:#00d4ff;"><strong>Red Team vs Blue Team</strong></a>:
+ cómo se armó un decoder y una rule desde cero para que Wazuh detectara 
+un escaneo de puertos con Nmap, algo que no reconoce de forma nativa.</p>
+        </div>
+    </div>
+
+    <div class="section" onclick="this.classList.toggle('collapsed')">
+        <h2>🔍 ¿Qué es un Decoder?</h2>
+        <div class="section-body">
+            <p>Un decoder es la pieza de configuración que le enseña a Wazuh a <strong>interpretar el contenido de un log</strong>.
+ Wazuh recibe constantemente líneas de texto plano desde distintas 
+fuentes (sistema operativo, aplicaciones, archivos personalizados), y 
+por sí solo no sabe qué significan ni qué partes son relevantes.</p>
+            <p>El decoder define un patrón (usando expresiones 
+regulares) que busca en esa línea de texto, y separa la información en 
+campos que Wazuh sí puede entender y usar después: quién generó el 
+evento, qué mensaje trae, desde dónde vino, etc.</p>
+            <div class="highlight-box">💡 Sin decoder, un log es solo 
+texto sin estructura para Wazuh. Con decoder, ese mismo texto se 
+transforma en datos organizados y consultables.</div>
+        </div>
+    </div>
+
+    <div class="section" onclick="this.classList.toggle('collapsed')">
+        <h2>⚖️ ¿Qué es una Rule?</h2>
+        <div class="section-body">
+            <p>Una rule es la pieza de configuración que le dice a Wazuh <strong>qué hacer cuando un log, ya interpretado por un decoder, cumple determinada condición</strong>. Es la capa que convierte "un dato que Wazuh entendió" en "una alerta que un analista puede ver y actuar".</p>
+            <p>Cada rule define, entre otras cosas: qué patrón o decoder debe coincidir, qué nivel de gravedad (<code>level</code>)
+ asignarle al evento (de 0 a 16, siendo 16 el más crítico), y a qué 
+grupo pertenece (por ejemplo: autenticación, malware, escaneo de red).</p>
+            <div class="highlight-box">💡 El decoder entiende el log, la rule decide si eso amerita una alerta y de qué gravedad.</div>
+        </div>
+    </div>
+
+    <div class="section" onclick="this.classList.toggle('collapsed')">
+        <h2>🔗 ¿Cómo se relacionan entre sí?</h2>
+        <div class="section-body">
+            <p>Las tres piezas dependen entre sí, siempre en el mismo orden: primero existe el <strong>log</strong> (el evento en sí), después el <strong>decoder</strong> lo interpreta, y finalmente la <strong>rule</strong> evalúa ese resultado y decide si generar una alerta.</p>
+            <p>Sin log, no hay nada que procesar. Sin decoder, el log no
+ se entiende. Sin rule, el log entendido no genera ninguna reacción. 
+Wazuh solo genera una alerta cuando las tres están correctamente 
+conectadas.</p>
+        </div>
+    </div>
+
+    <div class="example-section">
+        <h2>🧪 Ejemplo práctico: detectando un escaneo de Nmap</h2>
+        <p class="subtitle">Wazuh no reconoce un escaneo de puertos por defecto. Acá se arma el flujo completo, desde cero, para que sí lo detecte.</p>
+
+        <div class="stepper">
+
+            <div class="step" onclick="this.classList.toggle('collapsed')">
+                <div class="step-header">
+                    <div class="step-number">1</div>
+                    <div class="step-title">El archivo de log</div>
+                    <span class="step-toggle">▼</span>
+                </div>
+                <div class="step-body">
+                    <p>Se creó un archivo dedicado para este tipo de evento:</p>
+                    <pre>/var/ossec/logs/external/nmap_attack.log</pre>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-03-carpeta-log_pLGE.png" alt="Carpeta external con el archivo de log" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <p style="margin-top:15px;">Este archivo se declaró en la configuración de Wazuh (<code>ossec.conf</code>), sección <code>&lt;localfile&gt;</code>, para que el sistema supiera que debía vigilarlo.</p>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-04a-ossec-conf-inicio_pLGE.png" alt="Comando sudo cat de ossec.conf" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-04b-ossec-conf-localfile_pLGE.png" alt="Sección localfile en ossec.conf" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step" onclick="this.classList.toggle('collapsed')">
+                <div class="step-header">
+                    <div class="step-number">2</div>
+                    <div class="step-title">El decoder personalizado</div>
+                    <span class="step-toggle">▼</span>
+                </div>
+                <div class="step-body">
+                    <p>Se creó un decoder nuevo desde el Dashboard (<strong>Management → Decoders</strong>), con este contenido:</p>
+                    <pre>&lt;decoder name="nmap-attack-event"&gt;
+  &lt;prematch&gt;^nmap-attack: DETECTED:&lt;/prematch&gt;
+  &lt;regex&gt;^nmap-attack: DETECTED: (.+)$&lt;/regex&gt;
+  &lt;order&gt;message&lt;/order&gt;
+&lt;/decoder&gt;</pre>
+                    <p><strong>¿Qué hace cada parte?</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li><code>prematch</code>: busca esa frase exacta al inicio del log</li>
+                        <li><code>regex</code>: extrae el mensaje que viene después de los dos puntos</li>
+                        <li><code>order</code>: define en qué campo guardar esa información extraída</li>
+                    </ul>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-01-decoders-lista_pLGE.png" alt="Lista de Decoders en el Dashboard" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-05-decoder-editor_pLGE.png" alt="Decoder en el editor del Dashboard" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-06-decoder-guardado_pLGE.png" alt="Decoder ya guardado en la lista" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step" onclick="this.classList.toggle('collapsed')">
+                <div class="step-header">
+                    <div class="step-number">3</div>
+                    <div class="step-title">La rule personalizada</div>
+                    <span class="step-toggle">▼</span>
+                </div>
+                <div class="step-body">
+                    <p>Se creó una rule asociada a ese decoder, desde <strong>Management → Rules</strong>:</p>
+                    <ul style="margin-left: 20px;">
+                        <li><strong>ID:</strong> 100003</li>
+                        <li><strong>Level:</strong> 14 (crítico)</li>
+                        <li><strong>Grupo:</strong> nmap-attack</li>
+                    </ul>
+                    <p style="margin-top:10px;"><strong>¿Por qué level 14?</strong>
+ Un escaneo de puertos es un indicio claro de reconocimiento previo a un
+ ataque, y merece atención inmediata del equipo de seguridad.</p>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-02-rules-lista_pLGE.png" alt="Lista de Rules en el Dashboard" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-07-rule-editor_pLGE.png" alt="Rule en el editor del Dashboard" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-08-rule-guardada_pLGE.png" alt="Rule ya guardada en la lista" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                </div>
+            </div>
+
+            <div class="step" onclick="this.classList.toggle('collapsed')">
+                <div class="step-header">
+                    <div class="step-number">4</div>
+                    <div class="step-title">Disparando el evento</div>
+                    <span class="step-toggle">▼</span>
+                </div>
+                <div class="step-body">
+                    <p>Con el decoder y la rule ya configurados, se simuló el evento escribiendo manualmente una línea en el archivo de log:</p>
+                    <pre>echo "nmap-attack: DETECTED: Escaneo de puertos desde 192.168.172.133 a 192.168.172.132" | sudo tee -a /var/ossec/logs/external/nmap_attack.log</pre>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-09-evento-disparado_pLGE.png" alt="Terminal disparando el evento simulado" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <div class="note-box">⚠️ Esta simulación escribe el 
+log manualmente para probar que el decoder y la rule funcionan 
+correctamente, tal como se haría antes de llevar una configuración a 
+producción. No es una detección de tráfico de red en tiempo real — para 
+eso Wazuh necesitaría un IDS de red (como Suricata) integrado.</div>
+                </div>
+            </div>
+
+            <div class="step" onclick="this.classList.toggle('collapsed')">
+                <div class="step-header">
+                    <div class="step-number">5</div>
+                    <div class="step-title">El resultado: la alerta generada</div>
+                    <span class="step-toggle">▼</span>
+                </div>
+                <div class="step-body">
+                    <p>Wazuh leyó el log, lo interpretó con el decoder, aplicó la rule correspondiente, y generó la alerta.</p>
+                    <p>En el Dashboard: <strong>Security Events</strong> (o <strong>Threat Hunting</strong>, según versión) → filtrado por <code>rule.id: 100003</code></p>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-10-alerta-security-events_pLGE.png" alt="Alerta en Security Events" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                    <p style="margin-top:15px;">Al hacer click en la alerta, se ve el detalle completo:</p>
+                    <ul style="margin-left: 20px;">
+                        <li><code>decoder.name</code>: nmap-attack-event</li>
+                        <li><code>rule.id</code>: 100003</li>
+                        <li><code>rule.level</code>: 14</li>
+                        <li><code>full_log</code>: el mensaje original completo</li>
+                    </ul>
+                    <div class="screenshot-real">
+                        <img src="index_files/captura-11-detalle-alerta_pLGE.png" alt="Detalle completo de la alerta" style="width:100%;border-radius:10px;border:1px solid rgba(0,212,255,0.2);margin-top:10px;">
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="tips-container" onclick="this.classList.toggle('collapsed')">
+        <h2>💡 Tips Importantes y Buenas Prácticas</h2>
+        <div class="tips-body">
+            <div class="tips-grid">
+                <div class="tips-box do">
+                    <strong style="color: #00d4ff;">✅ SIEMPRE HACER:</strong>
+                    <ul>
+                        <li>Probar el decoder/rule con un log simulado antes de confiar en él en producción</li>
+                        <li>Usar IDs de rule por encima de 100000 (rango reservado para reglas personalizadas)</li>
+                        <li>Documentar qué patrón detecta cada rule propia</li>
+                        <li>Revisar que el regex no sea demasiado amplio (falsos positivos)</li>
+                    </ul>
+                </div>
+                <div class="tips-box dont">
+                    <strong style="color: #ff6b6b;">❌ NUNCA HACER:</strong>
+                    <ul>
+                        <li>Modificar los decoders/rules por defecto de Wazuh</li>
+                        <li>Asignar level 14-16 a eventos que no lo ameritan (satura las alertas críticas)</li>
+                        <li>Dejar un regex sin probar en un entorno real</li>
+                        <li>Olvidar reiniciar el servicio de Wazuh después de un cambio</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="related-section">
+        <h2>🔗 Proyectos relacionados</h2>
+        <div class="related-grid">
+            <a href="https://ezeayre.github.io/Ciberseguridad_Porfolio/RedTeam-vs-BlueTeam/index.html" class="related-card">
+                <div class="related-title">Red Team vs Blue Team</div>
+                <div class="related-desc">El ataque original que motivó esta configuración</div>
+            </a>
+            <a href="https://github.com/Ezeayre/Ciberseguridad_Porfolio/tree/main/SIEM/wazuh-setup" class="related-card">
+                <div class="related-title">Wazuh Setup</div>
+                <div class="related-desc">Instalación inicial de Wazuh</div>
+            </a>
+        </div>
+    </div>
+
+    <footer>
+        <p><strong>Decoders y Rules en Wazuh</strong> | Autor: Ezequiel Ayre</p>
+        <p style="margin-top: 8px;">2026</p>
+    </footer>
+
+</div>
+
+
+</body></html>
