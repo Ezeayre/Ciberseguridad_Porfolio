@@ -396,7 +396,7 @@
 <body>
     <div class="container">
         <header style="position: relative;">
-            <a href="http://192.168.172.1:8100/index.html" style="position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; color: #00d4ff; text-decoration: none; font-size: 0.95rem; padding: 8px 12px; border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 6px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(0, 212, 255, 0.1)'" onmouseout="this.style.background='transparent'">
+            <a href="http://192.168.172.1:8400/index.html" style="position: absolute; top: 20px; left: 20px; display: flex; align-items: center; gap: 8px; color: #00d4ff; text-decoration: none; font-size: 0.95rem; padding: 8px 12px; border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 6px; transition: all 0.3s ease;" onmouseover="this.style.background='rgba(0, 212, 255, 0.1)'" onmouseout="this.style.background='transparent'">
                 ← Volver al Portafolio
             </a>
             <h1>📋 Tickets en SOC</h1>
@@ -460,15 +460,22 @@
                 </tr>
             </tbody></table>
 
-            <h3 style="margin-top: 30px; color: #00d4ff;">📋 Ejemplo: Ticket Completo (Caso Real)</h3>
+            <h3 style="margin-top: 30px; color: #00d4ff;">📋 Ejemplo: Ticket Completo — Caso del Proyecto Red Team vs Blue Team</h3>
             <div style="background: rgba(0, 0, 0, 0.3); padding: 15px; border-radius: 8px; border-left: 3px solid #00d4ff; font-size: 0.95rem; margin-top: 15px;">
-                <p><strong>ID:</strong> TK-2026-0847 | <strong>Fecha:</strong> 2026-06-12 14:32 UTC | <strong>Reportado por:</strong> Wazuh SIEM</p>
-                <p style="margin-top: 10px;"><strong>Título:</strong> Alerta de Phishing - Múltiples empleados en dominio paypa1.com</p>
+                <p><strong>ID:</strong> TK-2026-0912 | <strong>Fecha:</strong> 2026-07-05 22:47 UTC | <strong>Reportado por:</strong> Wazuh SIEM</p>
+                <p style="margin-top: 10px;"><strong>Título:</strong> Escaneo de puertos detectado desde host 192.168.172.133</p>
                 <p style="margin-top: 10px;"><strong>Descripción:</strong>
- Se detectó phishing dirigido a 45 empleados. 12 hicieron clic en enlace
- malicioso. Bloqueado inmediatamente. Requiere reseteo de credenciales.</p>
-                <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span style="background: rgba(255, 0, 0, 0.2); color: #ff6b6b; padding: 2px 8px; border-radius: 4px;">Crítica</span> | <strong>Categoría:</strong> Incident | <strong>Estado:</strong> <span style="background: rgba(255, 165, 0, 0.2); color: #ffa500; padding: 2px 8px; border-radius: 4px;">En Progreso</span></p>
-                <p style="margin-top: 10px;"><strong>Asignado a:</strong> carlos.rodriguez@empresa.com | <strong>Etiquetas:</strong> phishing, email, urgente</p>
+ Se detectó un escaneo de puertos (Nmap) originado desde 192.168.172.133
+ hacia 192.168.172.132. El tráfico fue confirmado mediante análisis en 
+Wireshark por el equipo de Blue Team. Wazuh generó la alerta 
+automáticamente (Rule ID 100003, nivel crítico). Se procedió a bloquear 
+la IP de origen.</p>
+                <p style="margin-top: 10px;"><strong>Prioridad:</strong> <span style="background: rgba(255, 0, 0, 0.2); color: #ff6b6b; padding: 2px 8px; border-radius: 4px;">Crítica</span> | <strong>Categoría:</strong> Incident | <strong>Estado:</strong> <span style="background: rgba(0, 255, 100, 0.2); color: #2ecc71; padding: 2px 8px; border-radius: 4px;">Resuelto</span></p>
+                <p style="margin-top: 10px;"><strong>Asignado a:</strong> ezequiel.ayre@empresa.com | <strong>Etiquetas:</strong> nmap, escaneo-puertos, wazuh, blue-team</p>
+                <p style="margin-top: 10px;"><strong>Resolución:</strong>
+ IP de origen bloqueada en el firewall. Se parcheó el servicio expuesto 
+en el puerto 443. Se actualizaron las reglas de Wazuh con lo aprendido 
+del incidente para agilizar futuras detecciones similares.</p>
             </div>
         </div>
 
@@ -623,6 +630,15 @@
             .tips-section.collapsed .tips-content { display: none; }
             .tips-section.collapsed h2::after { transform: rotate(-90deg); transition: 0.3s; }
         </style>
+
+        <div class="section">
+            <h2 style="cursor: auto;">🔗 Proyecto Relacionado</h2>
+            <p>El ejemplo de ticket completo de esta guía documenta un caso real: el escaneo de puertos simulado en el proyecto <strong>Red Team vs Blue Team</strong>, detectado gracias a un decoder y rule configurados en Wazuh.</p>
+            <p style="margin-top: 10px;">
+                <a href="https://ezeayre.github.io/Ciberseguridad_Porfolio/RedTeam-vs-BlueTeam/index.html" style="color:#00d4ff;">→ Ver proyecto Red Team vs Blue Team</a><br>
+                <a href="https://ezeayre.github.io/Ciberseguridad_Porfolio/SIEM/decoders-rules-wazuh/index.html" style="color:#00d4ff;">→ Ver proyecto Decoders y Rules en Wazuh</a>
+            </p>
+        </div>
 
         <footer>
             <p><strong>Guía de Tickets en SOC</strong> | Autor: Ezequiel Ayre</p>
