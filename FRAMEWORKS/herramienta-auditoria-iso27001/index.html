@@ -3,7 +3,7 @@
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Auditoría Interna ISO 27001 — Caso RutaVerde Logística</title>
+<title>Herramienta de Auditoría ISO 27001</title>
 <style>
   :root{
     --bg1:#1a1a2e; --bg2:#16213e; --bg3:#0f3460; --card:#1b2740;
@@ -190,29 +190,24 @@
   <div class="titles" style="display:flex;align-items:center;">
     <a href="https://ezeayre.github.io/Ciberseguridad_Porfolio/" class="back-btn">← Volver al Portafolio</a>
     <div>
-      <h1>Auditoría Interna ISO 27001 — RutaVerde Logística</h1>
-      <div class="sub">Caso práctico · Del plan de auditoría al cierre con acción correctiva</div>
+      <h1>Herramienta de Auditoría ISO 27001</h1>
+      <div class="sub">Auditoría de SGSI para cualquier empresa · ISO/IEC 27001:2022</div>
     </div>
   </div>
-  <div class="badge">CASO PRÁCTICO</div>
+  <div class="badge">HERRAMIENTA DE AUDITORÍA</div>
 </header>
 
 <div style="max-width:1180px; margin:24px auto 0; padding:0 20px;">
   <div class="card" style="margin-bottom:0;">
-    <h2 style="margin-bottom:10px;">📋 <span class="accent">¿De qué trata este proyecto?</span></h2>
-    <p class="desc" style="margin-bottom:10px;">Este dashboard simula 
-una auditoría interna de un Sistema de Gestión de Seguridad de la 
-Información (SGSI) bajo ISO/IEC 27001, siguiendo el proceso real: se 
-define un plan de auditoría, se aplica un checklist sobre los controles 
-del Anexo A, se detectan hallazgos, se redacta una no conformidad 
-formal, se define una acción correctiva con análisis de causa raíz, y se
- cierra todo en un informe descargable.</p>
-    <p class="desc" style="margin-bottom:10px;">El caso usado es el de <strong>RutaVerde Logística</strong>,
- una empresa ficticia donde se detectó que el acceso de un ex empleado 
-(usuario del sistema de almacén y tarjeta de acceso físico) no fue 
-revocado al momento de su desvinculación — un hallazgo simple y 
-frecuente en auditorías reales de control de acceso. Esta versión usa el
- mismo motor que la <a href="https://ezeayre.github.io/Ciberseguridad_Porfolio/FRAMEWORKS/herramienta-auditoria-iso27001/index.html">Herramienta de Auditoría ISO 27001</a> genérica, ya precargada con este caso a modo de ejemplo.</p>
+    <h2 style="margin-bottom:10px;">📋 <span class="accent">Herramienta de Auditoría ISO 27001</span></h2>
+    <p class="desc" style="margin-bottom:10px;">Esta herramienta permite
+ realizar auditorías internas de Sistemas de Gestión de Seguridad de la 
+Información (SGSI) bajo ISO/IEC 27001:2022 para cualquier empresa. Sigue
+ el proceso completo: definición del plan de auditoría, aplicación de 
+checklist sobre los controles del Anexo A, detección de hallazgos, 
+redacción de no conformidades formales, definición de acciones 
+correctivas con análisis de causa raíz (5 Porqués), y generación de 
+informes descargables.</p>
     <div class="status-row" style="margin-top:12px;">
       <button class="btn btn-primary" style="padding:8px 16px;font-size:12px;" onclick="showCompanyModal()">+ Nueva Empresa</button>
       <button class="btn btn-ghost" style="padding:8px 16px;font-size:12px;" onclick="showAuditList()">📁 Ver Auditorías Guardadas</button>
@@ -229,8 +224,8 @@ frecuente en auditorías reales de control de acceso. Esta versión usa el
     <div class="step-item active" data-step="1"><div class="step-num">1</div><div class="step-label">Plan de Auditoría</div></div>
     <div class="step-item done" data-step="2"><div class="step-num">2</div><div class="step-label">Checklist aplicado</div></div>
     <div class="step-item done" data-step="3"><div class="step-num">3</div><div class="step-label">Hallazgo</div></div>
-    <div class="step-item done" data-step="4"><div class="step-num">4</div><div class="step-label">No Conformidad</div></div>
-    <div class="step-item done" data-step="5"><div class="step-num">5</div><div class="step-label">Acción Correctiva</div></div>
+    <div class="step-item" data-step="4"><div class="step-num">4</div><div class="step-label">No Conformidad</div></div>
+    <div class="step-item" data-step="5"><div class="step-num">5</div><div class="step-label">Acción Correctiva</div></div>
     <div class="step-item" data-step="6"><div class="step-num">6</div><div class="step-label">Cierre e Informe</div></div>
     <div style="margin-top:16px;">
       <button class="btn btn-ghost" style="width:100%;font-size:11.5px;padding:9px;" onclick="resetAll()">↺ Reiniciar auditoría</button>
@@ -248,12 +243,12 @@ frecuente en auditorías reales de control de acceso. Esta versión usa el
       </div>
 
       <label for="p_org">Organización</label>
-      <input type="text" id="p_org" data-field="p_org" placeholder="Nombre de la empresa a auditar" value="RutaVerde Logística S.A.">
+      <input type="text" id="p_org" data-field="p_org" placeholder="Nombre de la empresa a auditar">
       
       <div class="row3">
         <div>
           <label for="p_auditor">Auditor(es)</label>
-          <input type="text" id="p_auditor" data-field="p_auditor" placeholder="Nombre del auditor o equipo" value="Equipo de auditoría interna RutaVerde Logística">
+          <input type="text" id="p_auditor" data-field="p_auditor" placeholder="Nombre del auditor o equipo">
         </div>
         <div>
           <label for="p_fecha">Fecha de auditoría</label>
@@ -266,20 +261,15 @@ frecuente en auditorías reales de control de acceso. Esta versión usa el
       </div>
 
       <label for="p_objetivo">Objetivo</label>
-      <textarea id="p_objetivo" data-field="p_objetivo" placeholder="Ej: Verificar el cumplimiento de los controles de seguridad de la información...">Verificar
- que la gestión de accesos a los sistemas críticos y a las instalaciones
- se realiza conforme a la política de seguridad de recursos humanos de 
-RutaVerde Logística.</textarea>
+      <textarea id="p_objetivo" data-field="p_objetivo" placeholder="Ej: Verificar el cumplimiento de los controles de seguridad de la información..."></textarea>
       
       <label for="p_alcance">Alcance</label>
-      <textarea id="p_alcance" data-field="p_alcance" placeholder="Ej: Procesos de TI, infraestructura, personal, etc.">Proceso de altas y bajas de personal, y su relación con el acceso al Sistema de Gestión de Almacén (WMS) y al depósito central.</textarea>
+      <textarea id="p_alcance" data-field="p_alcance" placeholder="Ej: Procesos de TI, infraestructura, personal, etc."></textarea>
       
       <label for="p_criterios">Criterios</label>
-      <textarea id="p_criterios" data-field="p_criterios" placeholder="Ej: ISO/IEC 27001:2022, legislación aplicable, políticas internas...">ISO/IEC
- 27001:2022 Anexo A (dominio A.7 — Seguridad de los recursos humanos) + 
-SOA de RutaVerde + procedimiento interno de gestión de accesos.</textarea>
+      <textarea id="p_criterios" data-field="p_criterios" placeholder="Ej: ISO/IEC 27001:2022, legislación aplicable, políticas internas...">ISO/IEC 27001:2022 Anexo A</textarea>
 
-      <div id="domainSummary" style="margin-top:12px;"><div class="callout ok" style="margin-top:12px;">✔ 5 controles cargados de 1 dominio(s): A.7</div></div>
+      <div id="domainSummary" style="margin-top:12px;"><div class="callout warn" style="margin-top:12px;">⚠ No has seleccionado dominios del Anexo A. Haz clic en "Seleccionar Dominios" para cargar los controles.</div></div>
 
       <div class="nav-buttons">
         <button class="btn btn-ghost" onclick="saveCurrentAudit()">💾 Guardar Auditoría</button>
@@ -292,64 +282,16 @@ SOA de RutaVerde + procedimiento interno de gestión de accesos.</textarea>
       <p class="desc">Evalúa cada control seleccionado. Registra la 
 evidencia encontrada y marca si cumple o no. Los hallazgos se generarán 
 automáticamente.</p>
-      <div id="checklistEmpty" class="callout warn" style="display:none;">
+      <div id="checklistEmpty" class="callout warn" style="display: block;">
         ⚠ No hay controles cargados. Ve al paso 1 y selecciona los dominios del Anexo A.
       </div>
-      <table class="chk" id="checklistTable" style="display: table;">
+      <table class="chk" id="checklistTable" style="display: none;">
         <thead>
           <tr><th style="width:9%">Control</th><th style="width:28%">Pregunta de auditoría</th><th style="width:33%">Evidencia encontrada</th><th style="width:15%">¿Cumple?</th></tr>
         </thead>
-        <tbody id="checklistBody"><tr>
-      <td><span class="code-pill">A.7.1</span></td>
-      <td>¿Se verifican los antecedentes de los candidatos antes de la contratación?</td>
-      <td><textarea data-idx="0" class="chk-evidencia" style="min-height:44px;">Se verificó el legajo de los últimos 3 ingresos: todos cuentan con verificación de antecedentes previa a la contratación.</textarea></td>
-      <td>
-        <div class="compliance-toggle">
-          <button class="sel-yes active" data-idx="0" data-val="si">Sí cumple</button>
-          <button class="sel-no " data-idx="0" data-val="no">No cumple</button>
-        </div>
-      </td></tr><tr>
-      <td><span class="code-pill">A.7.2</span></td>
-      <td>¿Se incluyen términos y condiciones de seguridad en los contratos de trabajo?</td>
-      <td><textarea data-idx="1" class="chk-evidencia" style="min-height:44px;">Los contratos incluyen cláusula de confidencialidad y uso aceptable de sistemas, firmada por el empleado.</textarea></td>
-      <td>
-        <div class="compliance-toggle">
-          <button class="sel-yes active" data-idx="1" data-val="si">Sí cumple</button>
-          <button class="sel-no " data-idx="1" data-val="no">No cumple</button>
-        </div>
-      </td></tr><tr>
-      <td><span class="code-pill">A.7.3</span></td>
-      <td>¿Existe un proceso de formación en seguridad de la información?</td>
-      <td><textarea data-idx="2" class="chk-evidencia" style="min-height:44px;">Se dicta una inducción de seguridad básica al ingreso, registrada en el legajo.</textarea></td>
-      <td>
-        <div class="compliance-toggle">
-          <button class="sel-yes active" data-idx="2" data-val="si">Sí cumple</button>
-          <button class="sel-no " data-idx="2" data-val="no">No cumple</button>
-        </div>
-      </td></tr><tr>
-      <td><span class="code-pill">A.7.4</span></td>
-      <td>¿Existe un proceso disciplinario para incumplimientos de seguridad?</td>
-      <td><textarea data-idx="3" class="chk-evidencia" style="min-height:44px;">Existe un procedimiento documentado y vigente, aplicado en 2 casos durante el último año.</textarea></td>
-      <td>
-        <div class="compliance-toggle">
-          <button class="sel-yes active" data-idx="3" data-val="si">Sí cumple</button>
-          <button class="sel-no " data-idx="3" data-val="no">No cumple</button>
-        </div>
-      </td></tr><tr>
-      <td><span class="code-pill">A.7.5</span></td>
-      <td>¿Se revocan los accesos al finalizar la relación laboral?</td>
-      <td><textarea data-idx="4" class="chk-evidencia" style="min-height:44px;">Se
- revisó la baja de un operario de depósito (desvinculado el 12/06). Su 
-usuario en el WMS y su tarjeta de acceso físico seguían activos 21 días 
-después, hasta que se detectó durante esta auditoría.</textarea></td>
-      <td>
-        <div class="compliance-toggle">
-          <button class="sel-yes " data-idx="4" data-val="si">Sí cumple</button>
-          <button class="sel-no active" data-idx="4" data-val="no">No cumple</button>
-        </div>
-      </td></tr></tbody>
+        <tbody id="checklistBody"></tbody>
       </table>
-      <div id="checklistSummary"><div class="callout warn">⚠ 1 control(es) marcados como "No cumple" — se generó un hallazgo automáticamente en el paso 3.</div></div>
+      <div id="checklistSummary"></div>
       <div class="nav-buttons">
         <button class="btn btn-ghost" onclick="goStep(1)">← Atrás</button>
         <button class="btn btn-primary" onclick="goStep(3)">Continuar al Hallazgo →</button>
@@ -361,14 +303,7 @@ después, hasta que se detectó durante esta auditoría.</textarea></td>
       <p class="desc">Un hallazgo es la brecha objetiva entre lo que 
 exige la norma / el SOA y lo que la evidencia realmente muestra. Estos 
 se generaron automáticamente desde tu checklist.</p>
-      <div id="findingsList">
-    <div class="finding-card">
-      <b>A.7.5</b> — ¿Se revocan los accesos al finalizar la relación laboral?<br>
-      <span style="color:#ffd9d3;">Evidencia encontrada: Se revisó la 
-baja de un operario de depósito (desvinculado el 12/06). Su usuario en 
-el WMS y su tarjeta de acceso físico seguían activos 21 días después, 
-hasta que se detectó durante esta auditoría.</span>
-    </div></div>
+      <div id="findingsList"><div class="callout ok">No se identificaron hallazgos: todos los controles verificados cumplen con la evidencia esperada.</div></div>
       <label for="f_notas">Notas adicionales del auditor (opcional)</label>
       <textarea id="f_notas" data-field="f_notas" placeholder="Contexto adicional observado durante la auditoría..."></textarea>
       <div class="nav-buttons">
@@ -383,31 +318,22 @@ hasta que se detectó durante esta auditoría.</span>
 vienen precargadas con el hallazgo real de esta auditoría) y genera el 
 enunciado formal.</p>
       <label for="nc_requisito">1. Requisito incumplido</label>
-      <textarea id="nc_requisito" data-field="nc_requisito">A.7.5 — 
-Seguridad de los recursos humanos, según el SOA de RutaVerde: los 
-accesos deben revocarse al finalizar la relación laboral.</textarea>
+      <textarea id="nc_requisito" data-field="nc_requisito"></textarea>
       <label for="nc_evidencia">2. Evidencia objetiva</label>
-      <textarea id="nc_evidencia" data-field="nc_evidencia">Se verificó 
-que el usuario del ex operario de depósito (baja efectiva el 12/06) 
-permaneció activo en el WMS y su tarjeta de acceso físico al depósito no
- fue desactivada, hasta el momento de esta auditoría, 21 días después de
- su desvinculación.</textarea>
+      <textarea id="nc_evidencia" data-field="nc_evidencia"></textarea>
       <label for="nc_descripcion">3. Descripción de la desviación</label>
-      <textarea id="nc_descripcion" data-field="nc_descripcion">La 
-organización no cuenta con un mecanismo que asegure la revocación 
-inmediata de accesos lógicos y físicos al momento de una baja de 
-personal, incumpliendo el control A.7.5 declarado en su SOA.</textarea>
+      <textarea id="nc_descripcion" data-field="nc_descripcion"></textarea>
       <label for="nc_clasificacion">4. Clasificación</label>
       <select id="nc_clasificacion" data-field="nc_clasificacion">
         <option value="Mayor" selected="selected">Mayor</option>
         <option value="Menor">Menor</option>
         <option value="Observación">Observación</option>
       </select>
-      <div class="nc-preview" id="ncPreview"><span class="lbl">Requisito:</span> A.7.5 — Seguridad de los recursos humanos, según el SOA de RutaVerde: los accesos deben revocarse al finalizar la relación laboral.
+      <div class="nc-preview" id="ncPreview"><span class="lbl">Requisito:</span> 
 
-<span class="lbl">Evidencia objetiva:</span> Se verificó que el usuario del ex operario de depósito (baja efectiva el 12/06) permaneció activo en el WMS y su tarjeta de acceso físico al depósito no fue desactivada, hasta el momento de esta auditoría, 21 días después de su desvinculación.
+<span class="lbl">Evidencia objetiva:</span> 
 
-<span class="lbl">Descripción:</span> La organización no cuenta con un mecanismo que asegure la revocación inmediata de accesos lógicos y físicos al momento de una baja de personal, incumpliendo el control A.7.5 declarado en su SOA.
+<span class="lbl">Descripción:</span> 
 
 <span class="lbl">Clasificación:</span> No Conformidad Mayor</div>
       <div class="nav-buttons">
@@ -421,22 +347,22 @@ personal, incumpliendo el control A.7.5 declarado en su SOA.</textarea>
       <p class="desc">No se cierra porque "ya se hizo": se cierra cuando hay evidencia objetiva de que la causa raíz desapareció.</p>
 
       <label>Corrección inmediata (contención)</label>
-      <textarea id="ac_correccion" data-field="ac_correccion">Se desactiva de inmediato el usuario del WMS y se da de baja la tarjeta de acceso físico del ex empleado.</textarea>
+      <textarea id="ac_correccion" data-field="ac_correccion"></textarea>
 
       <label style="margin-top:22px;">Causa raíz — 5 Porqués</label>
       <div class="why-chain">
-        <div class="why-item" data-n="1"><input type="text" id="why1" data-field="why1" placeholder="¿Por qué ocurrió...?" value="El acceso del ex empleado no fue revocado el día de su baja."></div>
-        <div class="why-item" data-n="2"><input type="text" id="why2" data-field="why2" placeholder="¿Por qué...?" value="RR.HH. no notificó a Sistemas la desvinculación de forma inmediata."></div>
-        <div class="why-item" data-n="3"><input type="text" id="why3" data-field="why3" placeholder="¿Por qué...?" value="No existe un procedimiento formal que conecte el proceso de baja de RR.HH. con la revocación de accesos en Sistemas."></div>
-        <div class="why-item" data-n="4"><input type="text" id="why4" data-field="why4" placeholder="¿Por qué...?" value="La comunicación entre RR.HH. y Sistemas para bajas de personal es informal (por chat, sin checklist ni responsable asignado)."></div>
-        <div class="why-item" data-n="5"><input type="text" id="why5" data-field="why5" placeholder="Causa raíz" value="Causa raíz: falta de un procedimiento formal e integrado entre RR.HH. y Sistemas para la revocación de accesos ante bajas de personal."></div>
+        <div class="why-item" data-n="1"><input type="text" id="why1" data-field="why1" placeholder="¿Por qué ocurrió...?"></div>
+        <div class="why-item" data-n="2"><input type="text" id="why2" data-field="why2" placeholder="¿Por qué...?"></div>
+        <div class="why-item" data-n="3"><input type="text" id="why3" data-field="why3" placeholder="¿Por qué...?"></div>
+        <div class="why-item" data-n="4"><input type="text" id="why4" data-field="why4" placeholder="¿Por qué...?"></div>
+        <div class="why-item" data-n="5"><input type="text" id="why5" data-field="why5" placeholder="Causa raíz"></div>
       </div>
 
       <label>Plan de acción</label>
       <div class="row3">
-        <div><label style="margin-top:0;font-size:11px;">Responsable</label><input type="text" id="ac_responsable" data-field="ac_responsable" value="RR.HH. + Sistemas"></div>
+        <div><label style="margin-top:0;font-size:11px;">Responsable</label><input type="text" id="ac_responsable" data-field="ac_responsable"></div>
         <div><label style="margin-top:0;font-size:11px;">Fecha compromiso</label><input type="date" id="ac_fecha" data-field="ac_fecha"></div>
-        <div><label style="margin-top:0;font-size:11px;">Acción concreta</label><input type="text" id="ac_accion" data-field="ac_accion" value="Crear un procedimiento formal donde RR.HH. notifique toda baja a Sistemas el mismo día, con checklist de revocación (WMS, correo, acceso físico) y firma de responsable."></div>
+        <div><label style="margin-top:0;font-size:11px;">Acción concreta</label><input type="text" id="ac_accion" data-field="ac_accion"></div>
       </div>
 
       <label>Verificación de eficacia (auditoría de seguimiento)</label>
@@ -609,50 +535,44 @@ const ISO_27001_DOMAINS = {
 };
 
 const DEFAULT_STATE = {
-  p_objetivo: "Verificar que la gestión de accesos a los sistemas críticos y a las instalaciones se realiza conforme a la política de seguridad de recursos humanos de RutaVerde Logística.",
-  p_alcance: "Proceso de altas y bajas de personal, y su relación con el acceso al Sistema de Gestión de Almacén (WMS) y al depósito central.",
-  p_criterios: "ISO/IEC 27001:2022 Anexo A (dominio A.7 — Seguridad de los recursos humanos) + SOA de RutaVerde + procedimiento interno de gestión de accesos.",
-  p_auditor: "Equipo de auditoría interna RutaVerde Logística",
+  p_objetivo: "",
+  p_alcance: "",
+  p_criterios: "ISO/IEC 27001:2022 Anexo A",
+  p_auditor: "",
   p_fecha: new Date().toISOString().slice(0,10),
-  p_org: "RutaVerde Logística S.A.",
-  p_sector: "Logística",
+  p_org: "",
+  p_sector: "",
 
-  checklist: [
-    { code:"A.7.1", pregunta:"¿Se verifican los antecedentes de los candidatos antes de la contratación?", evidencia:"Se verificó el legajo de los últimos 3 ingresos: todos cuentan con verificación de antecedentes previa a la contratación.", cumple:"si" },
-    { code:"A.7.2", pregunta:"¿Se incluyen términos y condiciones de seguridad en los contratos de trabajo?", evidencia:"Los contratos incluyen cláusula de confidencialidad y uso aceptable de sistemas, firmada por el empleado.", cumple:"si" },
-    { code:"A.7.3", pregunta:"¿Existe un proceso de formación en seguridad de la información?", evidencia:"Se dicta una inducción de seguridad básica al ingreso, registrada en el legajo.", cumple:"si" },
-    { code:"A.7.4", pregunta:"¿Existe un proceso disciplinario para incumplimientos de seguridad?", evidencia:"Existe un procedimiento documentado y vigente, aplicado en 2 casos durante el último año.", cumple:"si" },
-    { code:"A.7.5", pregunta:"¿Se revocan los accesos al finalizar la relación laboral?", evidencia:"Se revisó la baja de un operario de depósito (desvinculado el 12/06). Su usuario en el WMS y su tarjeta de acceso físico seguían activos 21 días después, hasta que se detectó durante esta auditoría.", cumple:"no" }
-  ],
+  checklist: [],
 
   f_notas: "",
 
-  nc_requisito: "A.7.5 — Seguridad de los recursos humanos, según el SOA de RutaVerde: los accesos deben revocarse al finalizar la relación laboral.",
-  nc_evidencia: "Se verificó que el usuario del ex operario de depósito (baja efectiva el 12/06) permaneció activo en el WMS y su tarjeta de acceso físico al depósito no fue desactivada, hasta el momento de esta auditoría, 21 días después de su desvinculación.",
-  nc_descripcion: "La organización no cuenta con un mecanismo que asegure la revocación inmediata de accesos lógicos y físicos al momento de una baja de personal, incumpliendo el control A.7.5 declarado en su SOA.",
+  nc_requisito: "",
+  nc_evidencia: "",
+  nc_descripcion: "",
   nc_clasificacion: "Mayor",
 
-  ac_correccion: "Se desactiva de inmediato el usuario del WMS y se da de baja la tarjeta de acceso físico del ex empleado.",
-  why1: "El acceso del ex empleado no fue revocado el día de su baja.",
-  why2: "RR.HH. no notificó a Sistemas la desvinculación de forma inmediata.",
-  why3: "No existe un procedimiento formal que conecte el proceso de baja de RR.HH. con la revocación de accesos en Sistemas.",
-  why4: "La comunicación entre RR.HH. y Sistemas para bajas de personal es informal (por chat, sin checklist ni responsable asignado).",
-  why5: "Causa raíz: falta de un procedimiento formal e integrado entre RR.HH. y Sistemas para la revocación de accesos ante bajas de personal.",
-  ac_responsable: "RR.HH. + Sistemas",
+  ac_correccion: "",
+  why1: "",
+  why2: "",
+  why3: "",
+  why4: "",
+  why5: "",
+  ac_responsable: "",
   ac_fecha: "",
-  ac_accion: "Crear un procedimiento formal donde RR.HH. notifique toda baja a Sistemas el mismo día, con checklist de revocación (WMS, correo, acceso físico) y firma de responsable.",
+  ac_accion: "",
   ac_fecha_seg: "",
   ac_evidencia_seg: "",
   ac_resultado: "Pendiente"
 };
 
-const STORAGE_KEY = "iso27001_audit_rutaverde_v1";
-const COMPANIES_KEY = "iso27001_companies_rutaverde";
-const AUDITS_KEY = "iso27001_audits_rutaverde";
+const STORAGE_KEY = "iso27001_audit_tool_v2";
+const COMPANIES_KEY = "iso27001_companies";
+const AUDITS_KEY = "iso27001_audits";
 
 let state = loadState();
 let currentStep = 1;
-let selectedDomains = ["A.7"];
+let selectedDomains = [];
 
 function loadState(){
   try{
